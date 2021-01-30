@@ -1,0 +1,39 @@
+{
+    "name": "orangesoft/backoff",
+    "description": "Backoff algorithm implementation",
+    "keywords": ["backoff", "exponential", "linear", "jitter", "sleeper", "retry"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksandr Denisyuk",
+            "email": "a@denisyuk.by",
+            "homepage": "https://denisyuk.by/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.2 || ^8.0"
+    },
+    "require-dev": {
+        "phpunit/php-timer": "^2.1",
+        "phpunit/phpunit": "^8.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Orangesoft\\Backoff\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Orangesoft\\Backoff\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --colors=always"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true
+    }
+}
