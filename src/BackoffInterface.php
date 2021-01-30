@@ -6,5 +6,5 @@ use Orangesoft\Backoff\Duration\DurationInterface;
 
 interface BackoffInterface
 {
-    public function getSleepTime(int $attempt): DurationInterface;
+    public function getNextTime(int $attempt): DurationInterface;
 }

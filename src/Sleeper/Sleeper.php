@@ -18,9 +18,9 @@ class Sleeper implements SleeperInterface
 
     public function sleep(int $attempt): void
     {
-        $sleepTime = $this->backoff->getSleepTime($attempt);
+        $nextTime = $this->backoff->getNextTime($attempt);
 
-        $microseconds = (int) $sleepTime->toMicroseconds();
+        $microseconds = (int) $nextTime->toMicroseconds();
 
         usleep($microseconds);
     }

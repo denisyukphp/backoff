@@ -55,9 +55,9 @@ abstract class AbstractBackoff implements BackoffInterface
         float $maxAttempts
     ): BackoffInterface;
 
-    public function getSleepTime(int $attempt): DurationInterface
+    public function getNextTime(int $attempt): DurationInterface
     {
-        return $this->backoff->getSleepTime($attempt);
+        return $this->backoff->getNextTime($attempt);
     }
 
     public function __clone()

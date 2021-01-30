@@ -32,7 +32,7 @@ final class Backoff implements BackoffInterface
      *
      * @throws LimitedAttemptsException
      */
-    public function getSleepTime(int $attempt): DurationInterface
+    public function getNextTime(int $attempt): DurationInterface
     {
         if ($attempt >= $this->config->getMaxAttempts()) {
             throw new LimitedAttemptsException('Attempts have reached the limit');
@@ -43,8 +43,8 @@ final class Backoff implements BackoffInterface
 
         $comparator = new Comparator($capTime, $waitTime);
 
-        $sleepTime = $comparator->getMin();
+        $nextTime = $comparator->getMin();
 
-        return $this->config->isJitterEnabled() ? $this->config->getJitter()->getJitterTime($sleepTime) : $sleepTime;
+        return $this->config->isJitterEnabled() ? $this->config->getJitter()->getJitterTime($nextTime) : $nextTime;
     }
 }
