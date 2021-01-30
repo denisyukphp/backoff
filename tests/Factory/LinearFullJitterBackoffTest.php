@@ -12,9 +12,9 @@ class LinearFullJitterBackoffTest extends TestCase
     {
         $backoff = new LinearFullJitterBackoff(new Milliseconds(1000));
 
-        $sleepTime = $backoff->getSleepTime(4);
+        $nextTime = $backoff->getNextTime(4);
 
-        $this->assertGreaterThanOrEqual(0, $sleepTime->toMilliseconds());
-        $this->assertLessThanOrEqual(5000, $sleepTime->toMilliseconds());
+        $this->assertGreaterThanOrEqual(0, $nextTime->toMilliseconds());
+        $this->assertLessThanOrEqual(5000, $nextTime->toMilliseconds());
     }
 }

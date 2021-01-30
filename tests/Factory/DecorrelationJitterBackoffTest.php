@@ -12,9 +12,9 @@ class DecorrelationJitterBackoffTest extends TestCase
     {
         $backoff = new DecorrelationJitterBackoff(new Milliseconds(1000));
 
-        $sleepTime = $backoff->getSleepTime(0);
+        $nextTime = $backoff->getNextTime(0);
 
-        $this->assertGreaterThanOrEqual(1000, $sleepTime->toMilliseconds());
-        $this->assertLessThanOrEqual(3000, $sleepTime->toMilliseconds());
+        $this->assertGreaterThanOrEqual(1000, $nextTime->toMilliseconds());
+        $this->assertLessThanOrEqual(3000, $nextTime->toMilliseconds());
     }
 }
