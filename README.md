@@ -17,3 +17,52 @@ composer require orangesoft/backoff
 ```
 
 This package requires PHP 7.2 or later.
+
+## Quick usage
+
+Configure base time, cap time and max attempts. Base time is the time for calculating the Backoff algorithm, cap time is the limitation of calculations for base time, max attempts is the limit of count next time.
+
+```php
+<?php
+
+use Orangesoft\Backoff\Duration\Milliseconds;
+use Orangesoft\Backoff\Duration\Seconds;
+use Orangesoft\Backoff\Duration\DurationInterface;
+use Orangesoft\Backoff\Factory\ExponentialBackoff;
+use Orangesoft\Backoff\Exception\LimitedAttemptsException;
+
+$baseTime = new Milliseconds(1000);
+$capTime = new Seconds(60);
+$maxAttempts = 5;
+
+$backoff = new ExponentialBackoff($baseTime, $capTime, $maxAttempts);
+
+/** @var DurationInterface $nextTime */
+$nextTime = $backoff->getNextTime($attempt = 4);
+
+// float(16000)
+$nextTime->toMilliseconds();
+```
+
+To process cases when max attempts is already exceeded catch [LimitedAttemptsException](https://github.com/Orangesoft-Development/backoff/blob/main/src/Exception/LimitedAttemptsException.php):
+
+```php
+try {
+    $nextTime = $backoff->getNextTime($attempt = 10);
+} catch (LimitedAttemptsException $e) {
+    // ...
+}
+```
+
+The count of the number of attempts starts at zero.
+
+## Documentation
+
+- [Configure backoff](docs/index.md#configure-backoff)
+- [Enable jitter](docs/index.md#enable-jitter)
+- [Use factory](docs/index.md#use-factory)
+- [Sleep with backoff](docs/index.md#sleep-with-backoff)
+- [Retrying exceptions](docs/index.md#retrying-exceptions)
+- [Handle limited attempts](docs/index.md#handle-limited-attempts)
+
+Read more about exponential backoff and jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).
