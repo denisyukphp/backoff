@@ -48,7 +48,7 @@ To process cases when max attempts is already exceeded catch [LimitedAttemptsExc
 
 ```php
 try {
-    $nextTime = $backoff->getNextTime($attempt = 10);
+    $backoff->getNextTime($attempt = 10);
 } catch (LimitedAttemptsException $e) {
     // ...
 }
