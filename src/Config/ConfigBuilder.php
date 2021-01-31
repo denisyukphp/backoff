@@ -80,6 +80,8 @@ class ConfigBuilder
 
     public function setJitter(JitterInterface $jitter): self
     {
+        $this->enableJitter();
+
         $this->jitter = $jitter;
 
         return $this;
