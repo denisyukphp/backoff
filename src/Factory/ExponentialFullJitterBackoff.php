@@ -28,7 +28,6 @@ class ExponentialFullJitterBackoff extends AbstractBackoff
             (new ConfigBuilder())
                 ->setCapTime($capTime)
                 ->setMaxAttempts($maxAttempts)
-                ->enableJitter()
                 ->setJitter(new FullJitter())
                 ->build()
         );
