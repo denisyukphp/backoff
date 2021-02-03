@@ -15,11 +15,11 @@ class ExceptionClassifier implements ExceptionClassifierInterface
     public function __construct(array $exceptionTypes = [])
     {
         foreach ($exceptionTypes as $exceptionType) {
-            $this->add($exceptionType);
+            $this->addExceptionType($exceptionType);
         }
     }
 
-    private function add(string $exceptionType): void
+    private function addExceptionType(string $exceptionType): void
     {
         if (!class_exists($exceptionType) || !is_a($exceptionType, \Throwable::class, true)) {
             throw new \InvalidArgumentException(
