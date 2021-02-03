@@ -2,9 +2,9 @@
 
 namespace Orangesoft\Backoff\Factory;
 
-use Orangesoft\Backoff\BackoffInterface;
-use Orangesoft\Backoff\Duration\DurationInterface;
 use Orangesoft\Backoff\Duration\Seconds;
+use Orangesoft\Backoff\Duration\DurationInterface;
+use Orangesoft\Backoff\BackoffInterface;
 
 abstract class AbstractBackoff implements BackoffInterface
 {
@@ -49,15 +49,11 @@ abstract class AbstractBackoff implements BackoffInterface
      *
      * @return BackoffInterface
      */
-    abstract protected function getBackoff(
-        DurationInterface $baseTime,
-        DurationInterface $capTime,
-        float $maxAttempts
-    ): BackoffInterface;
+    abstract protected function getBackoff(DurationInterface $baseTime, DurationInterface $capTime, float $maxAttempts): BackoffInterface;
 
-    public function getNextTime(int $attempt): DurationInterface
+    public function generate(int $attempt): DurationInterface
     {
-        return $this->backoff->getNextTime($attempt);
+        return $this->backoff->generate($attempt);
     }
 
     public function __clone()

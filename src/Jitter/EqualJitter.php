@@ -7,9 +7,9 @@ use Orangesoft\Backoff\Duration\Nanoseconds;
 
 class EqualJitter implements JitterInterface
 {
-    public function getJitterTime(DurationInterface $nextTime): DurationInterface
+    public function getJitterTime(DurationInterface $backoffTime): DurationInterface
     {
-        $nanoseconds = $nextTime->toNanoseconds() / 2 + mt_rand(0, $nextTime->toNanoseconds() / 2);
+        $nanoseconds = $backoffTime->toNanoseconds() / 2 + mt_rand(0, $backoffTime->toNanoseconds() / 2);
 
         return new Nanoseconds($nanoseconds);
     }

@@ -6,5 +6,5 @@ use Orangesoft\Backoff\Duration\DurationInterface;
 
 interface JitterInterface
 {
-    public function getJitterTime(DurationInterface $nextTime): DurationInterface;
+    public function getJitterTime(DurationInterface $backoffTime): DurationInterface;
 }

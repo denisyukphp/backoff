@@ -18,11 +18,8 @@ class LinearEqualJitterBackoff extends AbstractBackoff
      *
      * @return BackoffInterface
      */
-    protected function getBackoff(
-        DurationInterface $baseTime,
-        DurationInterface $capTime,
-        float $maxAttempts
-    ): BackoffInterface {
+    protected function getBackoff(DurationInterface $baseTime, DurationInterface $capTime, float $maxAttempts): BackoffInterface
+    {
         return new Backoff(
             new LinearStrategy($baseTime),
             (new ConfigBuilder())

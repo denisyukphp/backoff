@@ -4,12 +4,12 @@ namespace Orangesoft\Backoff\Factory;
 
 use Orangesoft\Backoff\Backoff;
 use Orangesoft\Backoff\BackoffInterface;
-use Orangesoft\Backoff\Strategy\ExponentialStrategy;
+use Orangesoft\Backoff\Strategy\ConstantStrategy;
 use Orangesoft\Backoff\Config\ConfigBuilder;
-use Orangesoft\Backoff\Jitter\FullJitter;
+use Orangesoft\Backoff\Jitter\EqualJitter;
 use Orangesoft\Backoff\Duration\DurationInterface;
 
-class ExponentialFullJitterBackoff extends AbstractBackoff
+class ConstantEqualJitterBackoff extends AbstractBackoff
 {
     /**
      * @param DurationInterface $baseTime
@@ -21,11 +21,11 @@ class ExponentialFullJitterBackoff extends AbstractBackoff
     protected function getBackoff(DurationInterface $baseTime, DurationInterface $capTime, float $maxAttempts): BackoffInterface
     {
         return new Backoff(
-            new ExponentialStrategy($baseTime),
+            new ConstantStrategy($baseTime),
             (new ConfigBuilder())
                 ->setCapTime($capTime)
                 ->setMaxAttempts($maxAttempts)
-                ->setJitter(new FullJitter())
+                ->setJitter(new EqualJitter())
                 ->build()
         );
     }

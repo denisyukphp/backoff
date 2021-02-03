@@ -17,11 +17,8 @@ class DecorrelationJitterBackoff extends AbstractBackoff
      *
      * @return BackoffInterface
      */
-    protected function getBackoff(
-        DurationInterface $baseTime,
-        DurationInterface $capTime,
-        float $maxAttempts
-    ): BackoffInterface {
+    protected function getBackoff(DurationInterface $baseTime, DurationInterface $capTime, float $maxAttempts): BackoffInterface
+    {
         return new Backoff(
             new DecorrelationJitterStrategy($baseTime),
             (new ConfigBuilder())
