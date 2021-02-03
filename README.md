@@ -20,7 +20,7 @@ This package requires PHP 7.2 or later.
 
 ## Quick usage
 
-Configure base time, cap time and max attempts. Base time is the time for calculating the Backoff algorithm, cap time is the limitation of calculations for base time, max attempts is the limit of count next time.
+Configure base time, cap time and max attempts. Base time is the time for calculating the Backoff algorithm, cap time is the limitation of calculations for base time, max attempts is the limit of call the backoff time generate.
 
 ```php
 <?php
@@ -37,18 +37,18 @@ $maxAttempts = 5;
 
 $backoff = new ExponentialBackoff($baseTime, $capTime, $maxAttempts);
 
-/** @var DurationInterface $nextTime */
-$nextTime = $backoff->getNextTime($attempt = 4);
+/** @var DurationInterface $backoffTime */
+$backoffTime = $backoff->generate($attempt = 4);
 
 // float(16000)
-$nextTime->toMilliseconds();
+$backoffTime->toMilliseconds();
 ```
 
 To process cases when max attempts is already exceeded catch [LimitedAttemptsException](https://github.com/Orangesoft-Development/backoff/blob/main/src/Exception/LimitedAttemptsException.php):
 
 ```php
 try {
-    $backoff->getNextTime($attempt = 10);
+    $backoff->generate($attempt = 10);
 } catch (LimitedAttemptsException $e) {
     // ...
 }
@@ -62,7 +62,7 @@ The count of the number of attempts starts at zero.
 - [Enable jitter](docs/index.md#enable-jitter)
 - [Use factory](docs/index.md#use-factory)
 - [Sleep with backoff](docs/index.md#sleep-with-backoff)
-- [Retrying exceptions](docs/index.md#retrying-exceptions)
+- [Retry for exceptions](docs/index.md#retry-for-exceptions)
 - [Handle limited attempts](docs/index.md#handle-limited-attempts)
 
 Read more about exponential backoff and jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).
