@@ -20,7 +20,7 @@ This package requires PHP 7.2 or later.
 
 ## Quick usage
 
-Configure base time, cap time and max attempts. Base time is the time for calculating the Backoff algorithm, cap time is the limitation of calculations for base time, max attempts is the limit of call the backoff time generate.
+Configure base time, cap time and max attempts. Base time is the time for calculating the Backoff algorithm, cap time is the limitation of calculations for base time, max attempts is the limit of call a backoff time generate.
 
 ```php
 <?php
