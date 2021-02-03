@@ -52,7 +52,6 @@ class ConfigBuilderTest extends TestCase
         $config = (new ConfigBuilder())
             ->setCapTime(new Milliseconds(1000))
             ->setMaxAttempts(5)
-            ->enableJitter()
             ->setJitter(new EqualJitter())
             ->build()
         ;

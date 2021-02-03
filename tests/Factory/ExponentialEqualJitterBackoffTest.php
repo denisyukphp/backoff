@@ -12,9 +12,9 @@ class ExponentialEqualJitterBackoffTest extends TestCase
     {
         $backoff = new ExponentialEqualJitterBackoff(new Milliseconds(1000));
 
-        $nextTime = $backoff->getNextTime(4);
+        $backoffTime = $backoff->generate(4);
 
-        $this->assertGreaterThanOrEqual(8000, $nextTime->toMilliseconds());
-        $this->assertLessThanOrEqual(16000, $nextTime->toMilliseconds());
+        $this->assertGreaterThanOrEqual(8000, $backoffTime->toMilliseconds());
+        $this->assertLessThanOrEqual(16000, $backoffTime->toMilliseconds());
     }
 }

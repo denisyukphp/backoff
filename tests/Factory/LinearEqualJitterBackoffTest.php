@@ -12,9 +12,9 @@ class LinearEqualJitterBackoffTest extends TestCase
     {
         $backoff = new LinearEqualJitterBackoff(new Milliseconds(1000));
 
-        $nextTime = $backoff->getNextTime(4);
+        $backoffTime = $backoff->generate(4);
 
-        $this->assertGreaterThanOrEqual(2500, $nextTime->toMilliseconds());
-        $this->assertLessThanOrEqual(5000, $nextTime->toMilliseconds());
+        $this->assertGreaterThanOrEqual(2500, $backoffTime->toMilliseconds());
+        $this->assertLessThanOrEqual(5000, $backoffTime->toMilliseconds());
     }
 }

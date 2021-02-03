@@ -71,4 +71,31 @@ class BackoffFactoryTest extends TestCase
 
         $this->assertInstanceOf(BackoffInterface::class, $backoff);
     }
+
+    public function testConstantBackoff(): void
+    {
+        $factory = new BackoffFactory();
+
+        $backoff = $factory->getConstantBackoff(new Milliseconds(1000));
+
+        $this->assertInstanceOf(BackoffInterface::class, $backoff);
+    }
+
+    public function testConstantFullJitterBackoff(): void
+    {
+        $factory = new BackoffFactory();
+
+        $backoff = $factory->getConstantFullJitterBackoff(new Milliseconds(1000));
+
+        $this->assertInstanceOf(BackoffInterface::class, $backoff);
+    }
+
+    public function testConstantEqualJitterBackoff(): void
+    {
+        $factory = new BackoffFactory();
+
+        $backoff = $factory->getConstantEqualJitterBackoff(new Milliseconds(1000));
+
+        $this->assertInstanceOf(BackoffInterface::class, $backoff);
+    }
 }

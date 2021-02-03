@@ -12,8 +12,8 @@ class LinearBackoffTest extends TestCase
     {
         $backoff = new LinearBackoff(new Milliseconds(1000));
 
-        $nextTime = $backoff->getNextTime(4);
+        $backoffTime = $backoff->generate(4);
 
-        $this->assertEquals(5000, $nextTime->toMilliseconds());
+        $this->assertEquals(5000, $backoffTime->toMilliseconds());
     }
 }

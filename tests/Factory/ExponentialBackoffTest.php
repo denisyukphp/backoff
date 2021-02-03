@@ -12,8 +12,8 @@ class ExponentialBackoffTest extends TestCase
     {
         $backoff = new ExponentialBackoff(new Milliseconds(1000));
 
-        $nextTime = $backoff->getNextTime(4);
+        $backoffTime = $backoff->generate(4);
 
-        $this->assertEquals(16000, $nextTime->toMilliseconds());
+        $this->assertEquals(16000, $backoffTime->toMilliseconds());
     }
 }

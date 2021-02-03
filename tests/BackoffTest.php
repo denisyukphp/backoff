@@ -20,9 +20,9 @@ class BackoffTest extends TestCase
 
         $backoff = new Backoff($strategy, $config);
 
-        $nextTime = $backoff->getNextTime(4);
+        $backoffTime = $backoff->generate(4);
 
-        $this->assertEquals(5000, $nextTime->toMilliseconds());
+        $this->assertEquals(5000, $backoffTime->toMilliseconds());
     }
 
     public function testMaxAttemptsFail(): void
@@ -35,7 +35,7 @@ class BackoffTest extends TestCase
 
         $this->expectException(LimitedAttemptsException::class);
 
-        $backoff->getNextTime(5);
+        $backoff->generate(5);
     }
 
     public function testCapTime(): void
@@ -46,9 +46,9 @@ class BackoffTest extends TestCase
 
         $backoff = new Backoff($strategy, $config);
 
-        $nextTime = $backoff->getNextTime(1);
+        $backoffTime = $backoff->generate(1);
 
-        $this->assertEquals(1000 * 60, $nextTime->toMilliseconds());
+        $this->assertEquals(1000 * 60, $backoffTime->toMilliseconds());
     }
 
     public function testJitterTime(): void
@@ -56,15 +56,14 @@ class BackoffTest extends TestCase
         $strategy = new LinearStrategy(new Milliseconds(1000));
 
         $config = (new ConfigBuilder())
-            ->enableJitter()
             ->setJitter(new EqualJitter())
             ->build()
         ;
 
         $backoff = new Backoff($strategy, $config);
 
-        $nextTime = $backoff->getNextTime(4);
+        $backoffTime = $backoff->generate(4);
 
-        $this->assertNotEquals(4000, $nextTime->toMilliseconds());
+        $this->assertNotEquals(4000, $backoffTime->toMilliseconds());
     }
 }
