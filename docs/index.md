@@ -104,16 +104,16 @@ $backoff = new ExponentialEqualJitterBackoff($baseTime);
 
 The following the backoff factories are available:
 
-- [ConstantBackoff](https://github.com/Orangesoft-Development/backoff/blob/main/src/Factory/ConstantBackoff.php)
-- [ConstantFullJitterBackoff](https://github.com/Orangesoft-Development/backoff/blob/main/src/Factory/ConstantFullJitterBackoff.php)
-- [ConstantEqualJitterBackoff](https://github.com/Orangesoft-Development/backoff/blob/main/src/Factory/ConstantEqualJitterBackoff.php)
-- [DecorrelationJitterBackoff](https://github.com/Orangesoft-Development/backoff/blob/main/src/Factory/DecorrelationJitterBackoff.php)
-- [ExponentialBackoff](https://github.com/Orangesoft-Development/backoff/blob/main/src/Factory/ExponentialBackoff.php)
-- [ExponentialFullJitterBackoff](https://github.com/Orangesoft-Development/backoff/blob/main/src/Factory/ExponentialFullJitterBackoff.php)
-- [ExponentialEqualJitterBackoff](https://github.com/Orangesoft-Development/backoff/blob/main/src/Factory/ExponentialEqualJitterBackoff.php)
-- [LinearBackoff](https://github.com/Orangesoft-Development/backoff/blob/main/src/Factory/LinearBackoff.php)
-- [LinearFullJitterBackoff](https://github.com/Orangesoft-Development/backoff/blob/main/src/Factory/LinearFullJitterBackoff.php)
-- [LinearEqualJitterBackoff](https://github.com/Orangesoft-Development/backoff/blob/main/src/Factory/LinearEqualJitterBackoff.php)
+- [ConstantBackoff](../src/Factory/ConstantBackoff.php)
+- [ConstantFullJitterBackoff](../src/Factory/ConstantFullJitterBackoff.php)
+- [ConstantEqualJitterBackoff](../src/Factory/ConstantEqualJitterBackoff.php)
+- [DecorrelationJitterBackoff](../src/Factory/DecorrelationJitterBackoff.php)
+- [ExponentialBackoff](../src/Factory/ExponentialBackoff.php)
+- [ExponentialFullJitterBackoff](../src/Factory/ExponentialFullJitterBackoff.php)
+- [ExponentialEqualJitterBackoff](../src/Factory/ExponentialEqualJitterBackoff.php)
+- [LinearBackoff](../src/Factory/LinearBackoff.php)
+- [LinearFullJitterBackoff](../src/Factory/LinearFullJitterBackoff.php)
+- [LinearEqualJitterBackoff](../src/Factory/LinearEqualJitterBackoff.php)
 
 ## Sleep with backoff
 
