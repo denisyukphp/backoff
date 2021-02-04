@@ -77,7 +77,7 @@ use Orangesoft\Backoff\Duration\Milliseconds;
 use Orangesoft\Backoff\Duration\Seconds;
 use Orangesoft\Backoff\Factory\BackoffFactory;
 use Orangesoft\Backoff\Factory\ExponentialEqualJitterBackoff;
-use Orangesoft\Backoff\Factory\LinearFullJitterBackoff;
+use Orangesoft\Backoff\BackoffInterface;
 
 $baseTime = new Milliseconds(1000);
 $capTime = new Seconds(60);
@@ -91,15 +91,15 @@ $factory = new BackoffFactory();
 $backoff = $factory->getExponentialEqualJitterBackoff($baseTime, $capTime, $maxAttempts);
 ```
 
-The same can be done by directly instantiating the Backoff. Cap time and max attempts are not required in the backoff factory.
+Cap time and max attempts are not required in the backoff factory. The same can be done by directly instantiating the Backoff:
 
 ```php
 $baseTime = new Milliseconds(1000);
 
 /**
- * @var LinearFullJitterBackoff $backoff 
+ * @var BackoffInterface $backoff 
  */
-$backoff = new LinearFullJitterBackoff($baseTime);
+$backoff = new ExponentialEqualJitterBackoff($baseTime);
 ```
 
 The following the backoff factories are available:
