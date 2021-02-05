@@ -15,8 +15,7 @@
         "php": "^7.2 || ^8.0"
     },
     "require-dev": {
-        "phpunit/php-timer": "^2.1",
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^8.5 || ^9.4"
     },
     "autoload": {
         "psr-4": {
@@ -31,7 +30,6 @@
     "scripts": {
         "test": "vendor/bin/phpunit --colors=always"
     },
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
         "sort-packages": true
