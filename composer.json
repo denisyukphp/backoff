@@ -18,6 +18,9 @@
         "phpunit/php-timer": "^2.1",
         "phpunit/phpunit": "^8.5 || ^9.4"
     },
+    "suggest": {
+        "orangesoft/retry": "Allows to use retry tool for exceptions"
+    },
     "autoload": {
         "psr-4": {
             "Orangesoft\\Backoff\\": "src/"
@@ -31,7 +34,6 @@
     "scripts": {
         "test": "vendor/bin/phpunit --colors=always"
     },
-    "prefer-stable": true,
     "config": {
         "sort-packages": true
     }
