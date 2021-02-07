@@ -5,6 +5,7 @@ namespace Orangesoft\Backoff\Tests\Sleeper;
 use PHPUnit\Framework\TestCase;
 use SebastianBergmann\Timer\Timer;
 use Orangesoft\Backoff\Sleeper\Sleeper;
+use Orangesoft\Backoff\Sleeper\SleeperInterface;
 use Orangesoft\Backoff\Factory\LinearBackoff;
 use Orangesoft\Backoff\Duration\Milliseconds;
 
@@ -22,8 +23,9 @@ class SleeperTest extends TestCase
 
         $sleeper->sleep(0);
 
-        $milliseconds = $timer->stop() * 1000 * 1000;
+        $milliseconds = $timer->stop() * 1000;
 
         $this->assertGreaterThanOrEqual(500, $milliseconds);
+        $this->assertInstanceOf(SleeperInterface::class, $sleeper);
     }
 }

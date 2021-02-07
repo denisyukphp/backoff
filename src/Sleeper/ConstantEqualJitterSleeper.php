@@ -20,4 +20,9 @@ class ConstantEqualJitterSleeper extends AbstractSleeper
 
         return new Sleeper($backoff);
     }
+
+    public function sleep(int $attempt = 0): void
+    {
+        parent::sleep($attempt);
+    }
 }
