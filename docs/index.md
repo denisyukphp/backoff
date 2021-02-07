@@ -9,7 +9,7 @@
 
 ## Configure backoff
 
-Configure base time, cap time and max attempts. Base time is the time for calculating a Backoff algorithm, cap time is the limitation of calculations for base time, max attempts is the limit of call a backoff time generate. Cap time and max attempts are not required. By default cap time is 60 seconds and max attempts is `INF`.
+Configure base time, cap time and max attempts. The base time is the time for calculating a Backoff algorithm, the cap time is the limitation of calculations for base time, max attempts is the limit of call a backoff time generate. Cap time and max attempts are not required. By default cap time is 60 seconds and max attempts is `INF`.
 
 ```php
 <?php
@@ -85,9 +85,7 @@ $maxAttempts = 5;
 
 $factory = new BackoffFactory();
 
-/**
- * @var ExponentialEqualJitterBackoff $backoff 
- */
+/** @var ExponentialEqualJitterBackoff $backoff */
 $backoff = $factory->getExponentialEqualJitterBackoff($baseTime, $capTime, $maxAttempts);
 ```
 
@@ -96,9 +94,7 @@ Cap time and max attempts are not required in the backoff factory. The same can 
 ```php
 $baseTime = new Milliseconds(1000);
 
-/**
- * @var BackoffInterface $backoff 
- */
+/** @var BackoffInterface $backoff */
 $backoff = new ExponentialEqualJitterBackoff($baseTime);
 ```
 
@@ -150,35 +146,39 @@ The Sleeper falls asleep with microsecond precision.
 
 ## Retry for exceptions
 
-You can retry to any exceptions and put a backoff time before the next call but before it you must configure a retry tool where must to set max attempts, a sleeper and a exception classifier. By default max attempts is 5, the sleeper is disabled and the exception classifier catch all exceptions. See below how configure the retry tool:
+To retry exceptions with backoff you must install additional package via Composer:
+
+```text
+composer require orangesoft/retry
+```
+
+Now you can retry to any exceptions and put a backoff time before the next call but before it you must configure the retry tool where must to set max attempts, a sleeper and a exception classifier:
 
 ```php
 <?php
 
+use Orangesoft\Retry\Retry;
+use Orangesoft\Retry\Sleeper\BackoffSleeper;
+use Orangesoft\Backoff\Factory\ExponentialBackoff;
 use Orangesoft\Backoff\Duration\Milliseconds;
-use Orangesoft\Backoff\Sleeper\ConstantSleeper;
-use Orangesoft\Backoff\Retry\ExceptionClassifier\ExceptionClassifier;
-use Orangesoft\Backoff\Retry\RetryBuilder;
-use Orangesoft\Backoff\Retry\RetryInterface;
 
 $baseTime = new Milliseconds(1000);
-
-$sleeper = new ConstantSleeper($baseTime);
+$backoff = new ExponentialBackoff($baseTime);
+$backoffSleeper = new BackoffSleeper($backoff);
 
 $exceptionClassifier = new ExceptionClassifier([
     \RuntimeException::class,
 ]);
 
-/** @var RetryInterface $retry */
 $retry = (new RetryBuilder())
     ->setMaxAttempts(5)
-    ->setSleeper($sleeper)
+    ->setSleeper($backoffSleeper)
     ->setExceptionClassifier($exceptionClassifier)
     ->build()
 ;
 ```
 
-The retry tool interface is very similar to `call_user_func_array()` in that its method `call()` also accepts a callable and args.
+The retry tool is very similar to `call_user_func_array()` in that its method `call()` also accepts a callback and arguments.
 
 ```php
 /**
@@ -200,7 +200,11 @@ $callback = function (int $min, int $max): int {
 };
 
 $args = [5, 10];
+```
 
+Now just call the `call()` method:
+
+```php
 $retry->call($callback, $args);
 ```
 
@@ -213,11 +217,12 @@ For a Backoff you can set max attempts and when this number is exceeded, a Limit
 ```php
 <?php
 
+use Orangesoft\Retry\RetryBuilder;
+use Orangesoft\Retry\Sleeper\BackoffSleeper;
 use Orangesoft\Backoff\Duration\Milliseconds;
 use Orangesoft\Backoff\Duration\Seconds;
 use Orangesoft\Backoff\Factory\ExponentialBackoff;
 use Orangesoft\Backoff\Sleeper\Sleeper;
-use Orangesoft\Backoff\Retry\RetryBuilder;
 use Orangesoft\Backoff\Exception\LimitedAttemptsException;
 
 $baseTime = new Milliseconds(1000);
@@ -247,12 +252,14 @@ try {
 }
 ```
 
-For a Retry you can set the max attempts to `PHP_INT_MAX` to disable max attempts for a retry tool and turn on count attempts of the Sleeper:
+For a Retry you can set the max attempts to `PHP_INT_MAX` to disable max attempts for a retry tool and turn on count attempts of a BackoffSleeper:
 
 ```php
+$backoffSleeper = new BackoffSleeper($backoff);
+
 $retry = (new RetryBuilder())
     ->setMaxAttempts(PHP_INT_MAX)
-    ->setSleeper($sleeper)
+    ->setSleeper($backoffSleeper)
     ->build()
 ;
 
