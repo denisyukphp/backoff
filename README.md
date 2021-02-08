@@ -20,7 +20,7 @@ This package requires PHP 7.2 or later.
 
 ## Quick usage
 
-Configure base time, cap time and max attempts. The base time is the time for calculating the Backoff algorithm, the cap time is the limitation of calculations for base time, max attempts is the limit of call a backoff time generate.
+Configure base time, cap time and max attempts:
 
 ```php
 <?php
@@ -65,4 +65,4 @@ The count of the number of attempts starts at zero.
 - [Retry for exceptions](docs/index.md#retry-for-exceptions)
 - [Handle limited attempts](docs/index.md#handle-limited-attempts)
 
-Read more about exponential backoff and jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).
+Read more about ExponentialBackoff and Jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).
