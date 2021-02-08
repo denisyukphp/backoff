@@ -12,14 +12,12 @@
         }
     ],
     "require": {
-        "php": "^7.2 || ^8.0"
+        "php": "^7.2 || ^8.0",
+        "orangesoft/retry": "^1.0"
     },
     "require-dev": {
         "phpunit/php-timer": "^2.1",
         "phpunit/phpunit": "^8.5 || ^9.4"
-    },
-    "suggest": {
-        "orangesoft/retry": "Allows to use retry tool for exceptions"
     },
     "autoload": {
         "psr-4": {
