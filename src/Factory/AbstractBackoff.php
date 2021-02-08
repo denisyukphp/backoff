@@ -2,7 +2,7 @@
 
 namespace Orangesoft\Backoff\Factory;
 
-use Orangesoft\Backoff\Duration\Seconds;
+use Orangesoft\Backoff\Config\ConfigBuilder;
 use Orangesoft\Backoff\Duration\DurationInterface;
 use Orangesoft\Backoff\BackoffInterface;
 
@@ -36,8 +36,8 @@ abstract class AbstractBackoff implements BackoffInterface
         ?float $maxAttempts = null
     ) {
         $this->baseTime = $baseTime;
-        $this->capTime = $capTime ?? new Seconds(60);
-        $this->maxAttempts = $maxAttempts ?? INF;
+        $this->capTime = $capTime ?? ConfigBuilder::getDefaultCapTime();
+        $this->maxAttempts = $maxAttempts ?? ConfigBuilder::getDefaultMaxAttempts();
 
         $this->backoff = $this->getBackoff($this->baseTime, $this->capTime, $this->maxAttempts);
     }

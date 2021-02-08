@@ -2,7 +2,7 @@
 
 namespace Orangesoft\Backoff\Sleeper;
 
-use Orangesoft\Backoff\Duration\Seconds;
+use Orangesoft\Backoff\Config\ConfigBuilder;
 use Orangesoft\Backoff\Duration\DurationInterface;
 
 abstract class AbstractSleeper implements SleeperInterface
@@ -35,8 +35,8 @@ abstract class AbstractSleeper implements SleeperInterface
         ?float $maxAttempts = null
     ) {
         $this->baseTime = $baseTime;
-        $this->capTime = $capTime ?? new Seconds(60);
-        $this->maxAttempts = $maxAttempts ?? INF;
+        $this->capTime = $capTime ?? ConfigBuilder::getDefaultCapTime();
+        $this->maxAttempts = $maxAttempts ?? ConfigBuilder::getDefaultMaxAttempts();
 
         $this->sleeper = $this->getSleeper($this->baseTime, $this->capTime, $this->maxAttempts);
     }

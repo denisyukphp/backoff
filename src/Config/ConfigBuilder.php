@@ -28,10 +28,10 @@ class ConfigBuilder
 
     public function __construct()
     {
-        $this->capTime = new Seconds(60);
-        $this->maxAttempts = INF;
-        $this->useJitter = false;
-        $this->jitter = new EqualJitter();
+        $this->capTime = self::getDefaultCapTime();
+        $this->maxAttempts = self::getDefaultMaxAttempts();
+        $this->useJitter = self::getDefaultUseJitter();
+        $this->jitter = self::getDefaultJitter();
     }
 
     public function setCapTime(DurationInterface $capTime): self
@@ -44,6 +44,11 @@ class ConfigBuilder
     public function getCapTime(): DurationInterface
     {
         return $this->capTime;
+    }
+
+    public static function getDefaultCapTime(): DurationInterface
+    {
+        return new Seconds(60);
     }
 
     /**
@@ -66,6 +71,11 @@ class ConfigBuilder
         return $this->maxAttempts;
     }
 
+    public static function getDefaultMaxAttempts(): float
+    {
+        return INF;
+    }
+
     public function enableJitter(): self
     {
         $this->useJitter = true;
@@ -78,6 +88,11 @@ class ConfigBuilder
         return $this->useJitter;
     }
 
+    public static function getDefaultUseJitter(): bool
+    {
+        return false;
+    }
+
     public function setJitter(JitterInterface $jitter): self
     {
         $this->enableJitter();
@@ -85,6 +100,11 @@ class ConfigBuilder
         $this->jitter = $jitter;
 
         return $this;
+    }
+
+    public static function getDefaultJitter(): JitterInterface
+    {
+        return new EqualJitter();
     }
 
     public function getJitter(): JitterInterface
