@@ -2,7 +2,9 @@
 
 namespace Orangesoft\Backoff\Sleeper;
 
-interface SleeperInterface
+use Orangesoft\Retry\Sleeper\SleeperInterface as RetrySleeperInterface;
+
+interface SleeperInterface extends RetrySleeperInterface
 {
     public function sleep(int $attempt): void;
 }
