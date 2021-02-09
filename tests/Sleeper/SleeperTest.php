@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 use SebastianBergmann\Timer\Timer;
 use Orangesoft\Backoff\Sleeper\Sleeper;
 use Orangesoft\Backoff\Sleeper\SleeperInterface;
+use Orangesoft\Backoff\Sleeper\BackoffSleeperInterface;
+use Orangesoft\Retry\Sleeper\SleeperInterface as RetrySleeperInterface;
 use Orangesoft\Backoff\Factory\LinearBackoff;
 use Orangesoft\Backoff\Duration\Milliseconds;
 
@@ -27,5 +29,7 @@ class SleeperTest extends TestCase
 
         $this->assertGreaterThanOrEqual(500, $milliseconds);
         $this->assertInstanceOf(SleeperInterface::class, $sleeper);
+        $this->assertInstanceOf(BackoffSleeperInterface::class, $sleeper);
+        $this->assertInstanceOf(RetrySleeperInterface::class, $sleeper);
     }
 }
