@@ -9,7 +9,7 @@
 
 ## Configure Backoff
 
-Configure base time, cap time and max attempts. The base time is the time for calculating Backoff algorithm, the cap time is the limitation of calculations for base time, max attempts is the limit of call a backoff time generate. Cap time and max attempts are not required. By default cap time is 60 seconds and max attempts is `INF`.
+Configure base time, cap time and max attempts. The cap time and max attempts are not required. By default the cap time is 60 seconds and max attempts is `INF`.
 
 ```php
 <?php
@@ -36,7 +36,7 @@ $config = (new ConfigBuilder())
 $backoff = new Backoff($strategy, $config);
 ```
 
-Also you must choose a strategy for generating the backoff time. Available are strategies such as constant, exponential, linear and decorrelation. Then instance Backoff with configured a strategy and a config.
+Also you must choose a strategy for generating a backoff time. Available are strategies such as constant, exponential, linear and decorrelation. Then instance Backoff with configured the strategy and a config.
 
 ```php
 /** @var DurationInterface $backoffTime */
@@ -46,7 +46,7 @@ $backoffTime = $backoff->generate($attempt = 4);
 $backoffTime->toMilliseconds();
 ```
 
-Backoff generates a duration time which based on the base time and the choices strategy. As a result, you can work with such values of time as a second, millisecond, microsecond and nanosecond.
+Backoff generates a duration time which is based on the base time and the choices strategy. As a result, you can work with such values of time as a second, millisecond, microsecond and nanosecond.
 
 ## Enable Jitter
 
