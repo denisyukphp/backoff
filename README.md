@@ -58,10 +58,10 @@ The count of the number of attempts starts at zero.
 
 ## Documentation
 
-- [Configure backoff](docs/index.md#configure-backoff)
-- [Enable jitter](docs/index.md#enable-jitter)
-- [Use factory](docs/index.md#use-factory)
-- [Sleep with backoff](docs/index.md#sleep-with-backoff)
+- [Configure Backoff](docs/index.md#configure-backoff)
+- [Enable Jitter](docs/index.md#enable-jitter)
+- [Use Factory](docs/index.md#use-factory)
+- [Sleep with Backoff](docs/index.md#sleep-with-backoff)
 - [Retry for exceptions](docs/index.md#retry-for-exceptions)
 - [Handle limited attempts](docs/index.md#handle-limited-attempts)
 
