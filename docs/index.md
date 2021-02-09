@@ -1,15 +1,15 @@
 # Documentation
 
-- [Configure backoff](#configure-backoff)
-- [Enable jitter](#enable-jitter)
-- [Use factory](#use-factory)
-- [Sleep with backoff](#sleep-with-backoff)
+- [Configure Backoff](#configure-backoff)
+- [Enable Jitter](#enable-jitter)
+- [Use Factory](#use-factory)
+- [Sleep with Backoff](#sleep-with-backoff)
 - [Retry for exceptions](#retry-for-exceptions)
 - [Handle limited attempts](#handle-limited-attempts)
 
-## Configure backoff
+## Configure Backoff
 
-Configure base time, cap time and max attempts. The base time is the time for calculating a Backoff algorithm, the cap time is the limitation of calculations for base time, max attempts is the limit of call a backoff time generate. Cap time and max attempts are not required. By default cap time is 60 seconds and max attempts is `INF`.
+Configure base time, cap time and max attempts. The base time is the time for calculating Backoff algorithm, the cap time is the limitation of calculations for base time, max attempts is the limit of call a backoff time generate. Cap time and max attempts are not required. By default cap time is 60 seconds and max attempts is `INF`.
 
 ```php
 <?php
@@ -36,7 +36,7 @@ $config = (new ConfigBuilder())
 $backoff = new Backoff($strategy, $config);
 ```
 
-Also you must choose a strategy for generating the backoff time. Available are strategies such as constant, exponential, linear and decorrelation. Then instance the Backoff with configured a strategy and a config.
+Also you must choose a strategy for generating the backoff time. Available are strategies such as constant, exponential, linear and decorrelation. Then instance Backoff with configured a strategy and a config.
 
 ```php
 /** @var DurationInterface $backoffTime */
@@ -46,11 +46,11 @@ $backoffTime = $backoff->generate($attempt = 4);
 $backoffTime->toMilliseconds();
 ```
 
-Backoff generates duration time which based on base time and choices strategy. As a result, you can work with such values of time as a second, millisecond, microsecond and nanosecond.
+Backoff generates a duration time which based on the base time and the choices strategy. As a result, you can work with such values of time as a second, millisecond, microsecond and nanosecond.
 
-## Enable jitter
+## Enable Jitter
 
-Enabled jitter allows to add an noise for a backoff time. This is necessary in order to make the generation of the backoff time unlike each other.
+Enabled Jitter allows to add an noise for the backoff time. This is necessary in order to make the generation of the backoff time unlike each other. Turn on it is very simple:
 
 ```php
 <?php
@@ -64,11 +64,11 @@ $config = (new ConfigBuilder())
 ;
 ```
 
-You can use [EqualJitter](https://github.com/Orangesoft-Development/backoff/blob/main/src/Jitter/EqualJitter.php) or [FullJitter](https://github.com/Orangesoft-Development/backoff/blob/main/src/Jitter/FullJitter.php). By default jitter is disabled.
+You can use [EqualJitter](../src/Jitter/EqualJitter.php) or [FullJitter](../src/Jitter/FullJitter.php). By default Jitter is disabled.
 
-## Use factory
+## Use Factory
 
-To easiest way to instance a Backoff is use a backoff factory. This makes configuring and instantiating the Backoff easier. Just configure base time, cap time, max attempts and pass them to the factory method:
+To easiest way to instance Backoff is use BackoffFactory. This makes configuring and instantiating Backoff easier. Just configure base time, cap time, max attempts and pass them to the factory method:
 
 ```php
 <?php
@@ -89,7 +89,7 @@ $factory = new BackoffFactory();
 $backoff = $factory->getExponentialEqualJitterBackoff($baseTime, $capTime, $maxAttempts);
 ```
 
-Cap time and max attempts are not required in the backoff factory. The same can be done by directly instantiating the Backoff:
+Cap time and max attempts are not required in BackoffFactory. The same can be done by directly instantiating Backoff:
 
 ```php
 $baseTime = new Milliseconds(1000);
@@ -98,7 +98,7 @@ $baseTime = new Milliseconds(1000);
 $backoff = new ExponentialEqualJitterBackoff($baseTime);
 ```
 
-The following the backoff factories are available:
+The following backoff factories are available:
 
 - [ConstantBackoff](../src/Factory/ConstantBackoff.php)
 - [ConstantFullJitterBackoff](../src/Factory/ConstantFullJitterBackoff.php)
@@ -111,9 +111,9 @@ The following the backoff factories are available:
 - [LinearFullJitterBackoff](../src/Factory/LinearFullJitterBackoff.php)
 - [LinearEqualJitterBackoff](../src/Factory/LinearEqualJitterBackoff.php)
 
-## Sleep with backoff
+## Sleep with Backoff
 
-The main purpose of Backoff is that to pause certain parts of the code for a while. This can be achieved by using a Sleeper. Just instance the Sleeper with some Backoff instance:
+The main purpose Backoff is that to pause certain parts of the code for a while. This can be achieved by using Sleeper. Just instance Sleeper with some Backoff instance:
 
 ```php
 <?php
@@ -131,7 +131,7 @@ $sleeper = new Sleeper($backoff);
 $sleeper->sleep($attempt = 4);
 ```
 
-The exact same effect can be obtained if immediately instance the Sleeper with definitely strategy:
+The exact same effect can be obtained if immediately instance Sleeper with definitely strategy:
 
 ```php
 $baseTime = new Milliseconds(1000);
@@ -142,29 +142,23 @@ $sleeper = new ExponentialSleeper($baseTime);
 $sleeper->sleep($attempt = 4);
 ```
 
-The Sleeper falls asleep with microsecond precision.
+Sleeper falls asleep with microsecond precision.
 
 ## Retry for exceptions
 
-To retry exceptions with backoff you must install additional package via Composer:
-
-```text
-composer require orangesoft/retry
-```
-
-Now you can retry to any exceptions and put a backoff time before the next call but before it you must configure the retry tool where must to set max attempts, a sleeper and a exception classifier:
+You can retry to any exceptions and put the backoff time before the next call but before it you must configure Retry where must to set Sleeper:
 
 ```php
 <?php
 
-use Orangesoft\Retry\Retry;
-use Orangesoft\Retry\Sleeper\BackoffSleeper;
-use Orangesoft\Backoff\Factory\ExponentialBackoff;
+use Orangesoft\Retry\RetryBuilder;
+use Orangesoft\Retry\ExceptionClassifier\ExceptionClassifier;
+use Orangesoft\Backoff\Sleeper\ExponentialSleeper;
 use Orangesoft\Backoff\Duration\Milliseconds;
 
 $baseTime = new Milliseconds(1000);
-$backoff = new ExponentialBackoff($baseTime);
-$backoffSleeper = new BackoffSleeper($backoff);
+
+$sleeper = new ExponentialSleeper($baseTime);
 
 $exceptionClassifier = new ExceptionClassifier([
     \RuntimeException::class,
@@ -172,13 +166,13 @@ $exceptionClassifier = new ExceptionClassifier([
 
 $retry = (new RetryBuilder())
     ->setMaxAttempts(5)
-    ->setSleeper($backoffSleeper)
+    ->setSleeper($sleeper)
     ->setExceptionClassifier($exceptionClassifier)
     ->build()
 ;
 ```
 
-The retry tool is very similar to `call_user_func_array()` in that its method `call()` also accepts a callback and arguments.
+By default max attempts is 5, Sleeper is disabled and the ExceptionClassifier catch all exceptions.
 
 ```php
 /**
@@ -208,17 +202,16 @@ Now just call the `call()` method:
 $retry->call($callback, $args);
 ```
 
-Retry will try to call the callable with args equal to the number set in max attempts in the config and it will put a backoff time each times for current attempt.
+Retry will try to call the callback with args equal to the number set in max attempts in the config and it will put the backoff time each times for current attempt.
 
 ## Handle limited attempts
 
-For a Backoff you can set max attempts and when this number is exceeded, a LimitedAttemptsException will be thrown:
+For Backoff you can set max attempts and when this number is exceeded LimitedAttemptsException will be thrown:
 
 ```php
 <?php
 
 use Orangesoft\Retry\RetryBuilder;
-use Orangesoft\Retry\Sleeper\BackoffSleeper;
 use Orangesoft\Backoff\Duration\Milliseconds;
 use Orangesoft\Backoff\Duration\Seconds;
 use Orangesoft\Backoff\Factory\ExponentialBackoff;
@@ -238,7 +231,7 @@ try {
 }
 ```
 
-It works exactly the same for a Sleeper:
+It works exactly the same for Sleeper:
 
 ```php
 $sleeper = new Sleeper($backoff);
@@ -252,14 +245,12 @@ try {
 }
 ```
 
-For a Retry you can set the max attempts to `PHP_INT_MAX` to disable max attempts for a retry tool and turn on count attempts of a BackoffSleeper:
+For Retry you can set the max attempts to `PHP_INT_MAX` to disable max attempts for the retry tool and enable max attempts for Sleeper:
 
 ```php
-$backoffSleeper = new BackoffSleeper($backoff);
-
 $retry = (new RetryBuilder())
     ->setMaxAttempts(PHP_INT_MAX)
-    ->setSleeper($backoffSleeper)
+    ->setSleeper($sleeper)
     ->build()
 ;
 
@@ -272,4 +263,4 @@ try {
 }
 ```
 
-By default max attempts of the retry tool is 5. To disable it, you need to set the largest number that supports PHP.
+To disable max attempts of the retry tool you need to set the largest number that supports PHP.
