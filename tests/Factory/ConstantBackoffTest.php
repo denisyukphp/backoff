@@ -14,6 +14,6 @@ class ConstantBackoffTest extends TestCase
 
         $backoffTime = $backoff->generate(4);
 
-        $this->assertEquals(1000, $backoffTime->toMilliseconds());
+        $this->assertEquals(1000, $backoffTime->asMilliseconds());
     }
 }

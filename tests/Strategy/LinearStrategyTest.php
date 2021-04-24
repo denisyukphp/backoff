@@ -14,6 +14,6 @@ class LinearStrategyTest extends TestCase
 
         $waitTime = $strategy->getWaitTime(4);
 
-        $this->assertEquals(5000, $waitTime->toMilliseconds());
+        $this->assertEquals(5000, $waitTime->asMilliseconds());
     }
 }

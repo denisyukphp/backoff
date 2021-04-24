@@ -14,7 +14,7 @@ class EqualJitterTest extends TestCase
 
         $jitterTime = $equalJitter->getJitterTime(new Milliseconds(1000));
 
-        $this->assertGreaterThanOrEqual(500, $jitterTime->toMilliseconds());
-        $this->assertLessThanOrEqual(1000, $jitterTime->toMilliseconds());
+        $this->assertGreaterThanOrEqual(500, $jitterTime->asMilliseconds());
+        $this->assertLessThanOrEqual(1000, $jitterTime->asMilliseconds());
     }
 }

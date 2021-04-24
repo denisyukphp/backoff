@@ -14,7 +14,7 @@ class DecorrelationJitterStrategyTest extends TestCase
 
         $waitTime = $strategy->getWaitTime(0);
 
-        $this->assertGreaterThanOrEqual(1000, $waitTime->toMilliseconds());
-        $this->assertLessThanOrEqual(3000, $waitTime->toMilliseconds());
+        $this->assertGreaterThanOrEqual(1000, $waitTime->asMilliseconds());
+        $this->assertLessThanOrEqual(3000, $waitTime->asMilliseconds());
     }
 }

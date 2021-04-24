@@ -14,7 +14,7 @@ class FullJitterTest extends TestCase
 
         $jitterTime = $equalJitter->getJitterTime(new Milliseconds(1000));
 
-        $this->assertGreaterThanOrEqual(0, $jitterTime->toMilliseconds());
-        $this->assertLessThanOrEqual(1000, $jitterTime->toMilliseconds());
+        $this->assertGreaterThanOrEqual(0, $jitterTime->asMilliseconds());
+        $this->assertLessThanOrEqual(1000, $jitterTime->asMilliseconds());
     }
 }

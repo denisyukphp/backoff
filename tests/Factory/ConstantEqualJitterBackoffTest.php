@@ -14,7 +14,7 @@ class ConstantEqualJitterBackoffTest extends TestCase
 
         $backoffTime = $backoff->generate(4);
 
-        $this->assertGreaterThanOrEqual(500, $backoffTime->toMilliseconds());
-        $this->assertLessThanOrEqual(1000, $backoffTime->toMilliseconds());
+        $this->assertGreaterThanOrEqual(500, $backoffTime->asMilliseconds());
+        $this->assertLessThanOrEqual(1000, $backoffTime->asMilliseconds());
     }
 }

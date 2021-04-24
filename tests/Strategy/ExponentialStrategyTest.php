@@ -14,6 +14,6 @@ class ExponentialStrategyTest extends TestCase
 
         $waitTime = $strategy->getWaitTime(4);
 
-        $this->assertEquals(16000, $waitTime->toMilliseconds());
+        $this->assertEquals(16000, $waitTime->asMilliseconds());
     }
 }

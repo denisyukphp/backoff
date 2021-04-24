@@ -16,7 +16,7 @@ class ConfigBuilderTest extends TestCase
     {
         $configBuilder = new ConfigBuilder();
 
-        $this->assertEquals(60, $configBuilder->getCapTime()->toSeconds());
+        $this->assertEquals(60, $configBuilder->getCapTime()->asSeconds());
         $this->assertEquals(INF, $configBuilder->getMaxAttempts());
         $this->assertSame(false, $configBuilder->isJitterEnabled());
         $this->assertInstanceOf(EqualJitter::class, $configBuilder->getJitter());

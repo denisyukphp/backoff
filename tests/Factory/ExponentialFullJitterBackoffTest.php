@@ -14,7 +14,7 @@ class ExponentialFullJitterBackoffTest extends TestCase
 
         $backoffTime = $backoff->generate(4);
 
-        $this->assertGreaterThanOrEqual(0, $backoffTime->toMilliseconds());
-        $this->assertLessThanOrEqual(16000, $backoffTime->toMilliseconds());
+        $this->assertGreaterThanOrEqual(0, $backoffTime->asMilliseconds());
+        $this->assertLessThanOrEqual(16000, $backoffTime->asMilliseconds());
     }
 }

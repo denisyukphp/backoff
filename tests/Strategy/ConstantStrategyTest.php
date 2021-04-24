@@ -14,6 +14,6 @@ class ConstantStrategyTest extends TestCase
 
         $waitTime = $strategy->getWaitTime(4);
 
-        $this->assertEquals(1000, $waitTime->toMilliseconds());
+        $this->assertEquals(1000, $waitTime->asMilliseconds());
     }
 }

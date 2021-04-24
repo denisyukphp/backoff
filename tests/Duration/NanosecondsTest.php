@@ -11,9 +11,9 @@ class NanosecondsTest extends TestCase
     {
         $nanoseconds = new Nanoseconds(1 * 1000 * 1000 * 1000);
 
-        $this->assertEquals(1 * 1000 * 1000 * 1000, $nanoseconds->toNanoseconds());
-        $this->assertEquals(1 * 1000 * 1000, $nanoseconds->toMicroseconds());
-        $this->assertEquals(1 * 1000, $nanoseconds->toMilliseconds());
-        $this->assertEquals(1, $nanoseconds->toSeconds());
+        $this->assertEquals(1 * 1000 * 1000 * 1000, $nanoseconds->asNanoseconds());
+        $this->assertEquals(1 * 1000 * 1000, $nanoseconds->asMicroseconds());
+        $this->assertEquals(1 * 1000, $nanoseconds->asMilliseconds());
+        $this->assertEquals(1, $nanoseconds->asSeconds());
     }
 }

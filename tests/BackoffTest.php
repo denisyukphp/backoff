@@ -22,7 +22,7 @@ class BackoffTest extends TestCase
 
         $backoffTime = $backoff->generate(4);
 
-        $this->assertEquals(5000, $backoffTime->toMilliseconds());
+        $this->assertEquals(5000, $backoffTime->asMilliseconds());
     }
 
     public function testMaxAttemptsFail(): void
@@ -48,7 +48,7 @@ class BackoffTest extends TestCase
 
         $backoffTime = $backoff->generate(1);
 
-        $this->assertEquals(1000 * 60, $backoffTime->toMilliseconds());
+        $this->assertEquals(1000 * 60, $backoffTime->asMilliseconds());
     }
 
     public function testJitterTime(): void
@@ -64,6 +64,6 @@ class BackoffTest extends TestCase
 
         $backoffTime = $backoff->generate(4);
 
-        $this->assertNotEquals(4000, $backoffTime->toMilliseconds());
+        $this->assertNotEquals(4000, $backoffTime->asMilliseconds());
     }
 }
