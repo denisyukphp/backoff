@@ -6,7 +6,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/orangesoft/backoff?style=plastic)](https://packagist.org/packages/orangesoft/backoff)
 [![License](https://img.shields.io/packagist/l/orangesoft/backoff?style=plastic&color=428F7E)](https://packagist.org/packages/orangesoft/backoff)
 
-Backoff algorithm implementation with helpful tools.
+Backoff algorithm implementation.
 
 ## Installation
 

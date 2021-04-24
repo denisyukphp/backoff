@@ -43,7 +43,7 @@ Also you must choose a strategy for generating a backoff time. Available are str
 $backoffTime = $backoff->generate($attempt = 4);
 
 // float(16000)
-$backoffTime->toMilliseconds();
+$backoffTime->asMilliseconds();
 ```
 
 Backoff generates a duration time which is based on the base time and the choices strategy. As a result, you can work with such values of time as a second, millisecond, microsecond and nanosecond.
