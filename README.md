@@ -41,7 +41,7 @@ $backoff = new ExponentialBackoff($baseTime, $capTime, $maxAttempts);
 $backoffTime = $backoff->generate($attempt = 4);
 
 // float(16000)
-$backoffTime->toMilliseconds();
+$backoffTime->asMilliseconds();
 ```
 
 To process cases when max attempts is already exceeded catch [LimitedAttemptsException](https://github.com/Orangesoft-Development/backoff/blob/main/src/Exception/LimitedAttemptsException.php):
