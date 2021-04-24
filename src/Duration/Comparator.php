@@ -21,11 +21,11 @@ class Comparator
 
     public function getMax(): DurationInterface
     {
-        return $this->a->toNanoseconds() > $this->b->toNanoseconds() ? $this->a : $this->b;
+        return $this->a->asNanoseconds() > $this->b->asNanoseconds() ? $this->a : $this->b;
     }
 
     public function getMin(): DurationInterface
     {
-        return $this->a->toNanoseconds() > $this->b->toNanoseconds() ? $this->b : $this->a;
+        return $this->a->asNanoseconds() > $this->b->asNanoseconds() ? $this->b : $this->a;
     }
 }

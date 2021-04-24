@@ -4,11 +4,11 @@ namespace Orangesoft\Backoff\Duration;
 
 interface DurationInterface
 {
-    public function toNanoseconds(): float;
+    public function asNanoseconds(): float;
 
-    public function toMicroseconds(): float;
+    public function asMicroseconds(): float;
 
-    public function toMilliseconds(): float;
+    public function asMilliseconds(): float;
 
-    public function toSeconds(): float;
+    public function asSeconds(): float;
 }

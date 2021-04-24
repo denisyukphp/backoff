@@ -19,7 +19,7 @@ class LinearStrategy implements StrategyInterface
 
     public function getWaitTime(int $attempt): DurationInterface
     {
-        $nanoseconds = $this->baseTime->toNanoseconds() * ($attempt + 1);
+        $nanoseconds = $this->baseTime->asNanoseconds() * ($attempt + 1);
 
         return new Nanoseconds($nanoseconds);
     }

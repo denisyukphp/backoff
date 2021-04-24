@@ -9,7 +9,7 @@ class FullJitter implements JitterInterface
 {
     public function getJitterTime(DurationInterface $backoffTime): DurationInterface
     {
-        $nanoseconds = mt_rand(0, $backoffTime->toNanoseconds());
+        $nanoseconds = mt_rand(0, $backoffTime->asNanoseconds());
 
         return new Nanoseconds($nanoseconds);
     }

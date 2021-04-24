@@ -9,7 +9,7 @@ class EqualJitter implements JitterInterface
 {
     public function getJitterTime(DurationInterface $backoffTime): DurationInterface
     {
-        $nanoseconds = $backoffTime->toNanoseconds() / 2 + mt_rand(0, $backoffTime->toNanoseconds() / 2);
+        $nanoseconds = $backoffTime->asNanoseconds() / 2 + mt_rand(0, $backoffTime->asNanoseconds() / 2);
 
         return new Nanoseconds($nanoseconds);
     }

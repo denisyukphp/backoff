@@ -23,7 +23,7 @@ class DecorrelationJitterStrategy implements StrategyInterface
 
     public function getWaitTime(int $attempt): DurationInterface
     {
-        $nanoseconds = mt_rand($this->baseTime->toNanoseconds(), $this->waitTime->toNanoseconds() * 3);
+        $nanoseconds = mt_rand($this->baseTime->asNanoseconds(), $this->waitTime->asNanoseconds() * 3);
 
         $this->waitTime = new Nanoseconds($nanoseconds);
 

@@ -20,7 +20,7 @@ class Sleeper implements SleeperInterface
     {
         $backoffTime = $this->backoff->generate($attempt);
 
-        $microseconds = (int) $backoffTime->toMicroseconds();
+        $microseconds = (int) $backoffTime->asMicroseconds();
 
         usleep($microseconds);
     }

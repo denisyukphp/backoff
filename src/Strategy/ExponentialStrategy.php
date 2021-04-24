@@ -19,7 +19,7 @@ class ExponentialStrategy implements StrategyInterface
 
     public function getWaitTime(int $attempt): DurationInterface
     {
-        $nanoseconds = $this->baseTime->toNanoseconds() * pow(2, $attempt);
+        $nanoseconds = $this->baseTime->asNanoseconds() * pow(2, $attempt);
 
         return new Nanoseconds($nanoseconds);
     }
