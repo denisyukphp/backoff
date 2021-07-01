@@ -29,13 +29,6 @@ $generator = GeneratorBuilder::create()
 ;
 ```
 
-The following strategies are available:
-
-- [ConstantStrategy](../src/Strategy/ConstantStrategy.php)
-- [LinearStrategy](../src/Strategy/LinearStrategy.php)
-- [ExponentialStrategy](../src/Strategy/ExponentialStrategy.php)
-- [DecorrelationJitterStrategy](../src/Strategy/DecorrelationJitterStrategy.php)
-
 Generator returns a duration time to sleep:
 
 ```php
@@ -189,7 +182,7 @@ $sleeper = new Sleeper();
 $backOff = new ExponentialBackOff($maxAttempts, $baseTimeMs, $capTimeMs, $multiplier, $jitter, $sleeper);
 ```
 
-Available facades match default strategies:
+The following facades are available:
 
 - [ConstantBackOff](../src/Facade/ConstantBackOff.php)
 - [LinearBackOff](../src/Facade/LinearBackOff.php)
