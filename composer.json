@@ -1,7 +1,7 @@
 {
     "name": "orangesoft/backoff",
-    "description": "Backoff algorithm implementation",
-    "keywords": ["backoff", "constant", "exponential", "linear", "jitter", "sleeper", "retry"],
+    "description": "Back-off algorithm implementation",
+    "keywords": ["backoff", "exponential", "linear", "constant", "decorrelation", "jitter", "sleeper", "retry"],
     "license": "MIT",
     "authors": [
         {
@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": "^7.2 || ^8.0",
-        "orangesoft/retry": "^1.0"
+        "symfony/polyfill-php80": "^1.23"
     },
     "require-dev": {
         "phpunit/php-timer": "^2.1",
@@ -21,12 +21,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Orangesoft\\Backoff\\": "src/"
+            "Orangesoft\\BackOff\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Orangesoft\\Backoff\\Tests\\": "tests/"
+            "Orangesoft\\BackOff\\Tests\\": "tests/"
         }
     },
     "scripts": {
