@@ -1,10 +1,10 @@
 <?php
 
-namespace Orangesoft\Backoff\Jitter;
+namespace Orangesoft\BackOff\Jitter;
 
-use Orangesoft\Backoff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\DurationInterface;
 
 interface JitterInterface
 {
-    public function getJitterTime(DurationInterface $backoffTime): DurationInterface;
+    public function jitter(DurationInterface $duration): DurationInterface;
 }

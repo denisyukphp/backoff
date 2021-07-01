@@ -1,10 +1,10 @@
 <?php
 
-namespace Orangesoft\Backoff\Strategy;
+namespace Orangesoft\BackOff\Strategy;
 
-use Orangesoft\Backoff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\DurationInterface;
 
 interface StrategyInterface
 {
-    public function getWaitTime(int $attempt): DurationInterface;
+    public function calculate(DurationInterface $duration, int $attempt): DurationInterface;
 }

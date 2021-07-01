@@ -1,9 +1,10 @@
 <?php
 
-namespace Orangesoft\Backoff\Sleeper;
+namespace Orangesoft\BackOff\Sleeper;
 
-use Orangesoft\Retry\Sleeper\SleeperInterface as RetrySleeperInterface;
+use Orangesoft\BackOff\Duration\DurationInterface;
 
-interface SleeperInterface extends BackoffSleeperInterface, RetrySleeperInterface
+interface SleeperInterface
 {
+    public function sleep(DurationInterface $duration): void;
 }

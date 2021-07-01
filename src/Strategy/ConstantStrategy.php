@@ -1,23 +1,13 @@
 <?php
 
-namespace Orangesoft\Backoff\Strategy;
+namespace Orangesoft\BackOff\Strategy;
 
-use Orangesoft\Backoff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\DurationInterface;
 
-class ConstantStrategy implements StrategyInterface
+final class ConstantStrategy implements StrategyInterface
 {
-    /**
-     * @var DurationInterface
-     */
-    protected $baseTime;
-
-    public function __construct(DurationInterface $baseTime)
+    public function calculate(DurationInterface $duration, int $attempt): DurationInterface
     {
-        $this->baseTime = $baseTime;
-    }
-
-    public function getWaitTime(int $attempt): DurationInterface
-    {
-        return $this->baseTime;
+        return $duration;
     }
 }

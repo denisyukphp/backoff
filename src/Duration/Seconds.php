@@ -1,8 +1,8 @@
 <?php
 
-namespace Orangesoft\Backoff\Duration;
+namespace Orangesoft\BackOff\Duration;
 
-class Seconds extends Duration
+final class Seconds extends AbstractDuration
 {
     public function __construct(float $seconds)
     {

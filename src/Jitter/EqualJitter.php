@@ -1,15 +1,15 @@
 <?php
 
-namespace Orangesoft\Backoff\Jitter;
+namespace Orangesoft\BackOff\Jitter;
 
-use Orangesoft\Backoff\Duration\DurationInterface;
-use Orangesoft\Backoff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\Nanoseconds;
 
-class EqualJitter implements JitterInterface
+final class EqualJitter implements JitterInterface
 {
-    public function getJitterTime(DurationInterface $backoffTime): DurationInterface
+    public function jitter(DurationInterface $duration): DurationInterface
     {
-        $nanoseconds = $backoffTime->asNanoseconds() / 2 + mt_rand(0, $backoffTime->asNanoseconds() / 2);
+        $nanoseconds = $duration->asNanoseconds() / 2 + mt_rand(0, $duration->asNanoseconds() / 2);
 
         return new Nanoseconds($nanoseconds);
     }

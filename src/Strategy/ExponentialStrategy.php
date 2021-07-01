@@ -1,25 +1,25 @@
 <?php
 
-namespace Orangesoft\Backoff\Strategy;
+namespace Orangesoft\BackOff\Strategy;
 
-use Orangesoft\Backoff\Duration\DurationInterface;
-use Orangesoft\Backoff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\Nanoseconds;
 
-class ExponentialStrategy implements StrategyInterface
+final class ExponentialStrategy implements StrategyInterface
 {
     /**
-     * @var DurationInterface
+     * @var int
      */
-    protected $baseTime;
+    private $multiplier;
 
-    public function __construct(DurationInterface $baseTime)
+    public function __construct(int $multiplier = 2)
     {
-        $this->baseTime = $baseTime;
+        $this->multiplier = $multiplier;
     }
 
-    public function getWaitTime(int $attempt): DurationInterface
+    public function calculate(DurationInterface $duration, int $attempt): DurationInterface
     {
-        $nanoseconds = $this->baseTime->asNanoseconds() * pow(2, $attempt);
+        $nanoseconds = $duration->asNanoseconds() * ($this->multiplier ** $attempt);
 
         return new Nanoseconds($nanoseconds);
     }

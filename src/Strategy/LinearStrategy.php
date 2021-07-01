@@ -1,25 +1,15 @@
 <?php
 
-namespace Orangesoft\Backoff\Strategy;
+namespace Orangesoft\BackOff\Strategy;
 
-use Orangesoft\Backoff\Duration\DurationInterface;
-use Orangesoft\Backoff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\Nanoseconds;
 
-class LinearStrategy implements StrategyInterface
+final class LinearStrategy implements StrategyInterface
 {
-    /**
-     * @var DurationInterface
-     */
-    protected $baseTime;
-
-    public function __construct(DurationInterface $baseTime)
+    public function calculate(DurationInterface $duration, int $attempt): DurationInterface
     {
-        $this->baseTime = $baseTime;
-    }
-
-    public function getWaitTime(int $attempt): DurationInterface
-    {
-        $nanoseconds = $this->baseTime->asNanoseconds() * ($attempt + 1);
+        $nanoseconds = $duration->asNanoseconds() * ($attempt + 1);
 
         return new Nanoseconds($nanoseconds);
     }

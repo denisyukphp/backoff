@@ -1,6 +1,6 @@
 <?php
 
-namespace Orangesoft\Backoff\Duration;
+namespace Orangesoft\BackOff\Duration;
 
 interface DurationInterface
 {

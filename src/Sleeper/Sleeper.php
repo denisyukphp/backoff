@@ -1,26 +1,14 @@
 <?php
 
-namespace Orangesoft\Backoff\Sleeper;
+namespace Orangesoft\BackOff\Sleeper;
 
-use Orangesoft\Backoff\BackoffInterface;
+use Orangesoft\BackOff\Duration\DurationInterface;
 
-class Sleeper implements SleeperInterface
+final class Sleeper implements SleeperInterface
 {
-    /**
-     * @var BackoffInterface
-     */
-    private $backoff;
-
-    public function __construct(BackoffInterface $backoff)
+    public function sleep(DurationInterface $duration): void
     {
-        $this->backoff = $backoff;
-    }
-
-    public function sleep(int $attempt): void
-    {
-        $backoffTime = $this->backoff->generate($attempt);
-
-        $microseconds = (int) $backoffTime->asMicroseconds();
+        $microseconds = $duration->asMicroseconds();
 
         usleep($microseconds);
     }

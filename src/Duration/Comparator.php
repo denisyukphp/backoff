@@ -1,8 +1,8 @@
 <?php
 
-namespace Orangesoft\Backoff\Duration;
+namespace Orangesoft\BackOff\Duration;
 
-class Comparator
+final class Comparator
 {
     /**
      * @var DurationInterface

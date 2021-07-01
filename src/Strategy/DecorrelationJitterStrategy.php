@@ -1,32 +1,36 @@
 <?php
 
-namespace Orangesoft\Backoff\Strategy;
+namespace Orangesoft\BackOff\Strategy;
 
-use Orangesoft\Backoff\Duration\DurationInterface;
-use Orangesoft\Backoff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\Nanoseconds;
 
-class DecorrelationJitterStrategy implements StrategyInterface
+final class DecorrelationJitterStrategy implements StrategyInterface
 {
     /**
-     * @var DurationInterface
+     * @var int
      */
-    protected $baseTime;
+    private $multiplier;
     /**
-     * @var DurationInterface
+     * @var float|null
      */
-    protected $waitTime;
+    private $previous;
 
-    public function __construct(DurationInterface $baseTime)
+    public function __construct(int $multiplier = 3)
     {
-        $this->baseTime = $this->waitTime = $baseTime;
+        $this->multiplier = $multiplier;
     }
 
-    public function getWaitTime(int $attempt): DurationInterface
+    public function calculate(DurationInterface $duration, int $attempt): DurationInterface
     {
-        $nanoseconds = mt_rand($this->baseTime->asNanoseconds(), $this->waitTime->asNanoseconds() * 3);
+        $base = $duration->asNanoseconds();
 
-        $this->waitTime = new Nanoseconds($nanoseconds);
+        if (0 === $attempt || null === $this->previous) {
+            $this->previous = $base;
+        }
 
-        return $this->waitTime;
+        $this->previous = mt_rand($base, $this->previous * $this->multiplier);
+
+        return new Nanoseconds($this->previous);
     }
 }
