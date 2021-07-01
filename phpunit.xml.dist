@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <phpunit bootstrap="./vendor/autoload.php">
     <testsuites>
-        <testsuite name="backoff test suite">
+        <testsuite name="back-off test suite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
