@@ -1,4 +1,4 @@
-# Backoff
+# BackOff
 
 [![Build Status](https://img.shields.io/travis/com/Orangesoft-Development/backoff/main?style=plastic)](https://travis-ci.com/Orangesoft-Development/backoff)
 [![Latest Stable Version](https://img.shields.io/packagist/v/orangesoft/backoff?style=plastic)](https://packagist.org/packages/orangesoft/backoff)
@@ -6,7 +6,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/orangesoft/backoff?style=plastic)](https://packagist.org/packages/orangesoft/backoff)
 [![License](https://img.shields.io/packagist/l/orangesoft/backoff?style=plastic&color=428F7E)](https://packagist.org/packages/orangesoft/backoff)
 
-Backoff algorithm implementation.
+Back-off algorithm implementation.
 
 ## Installation
 
@@ -20,49 +20,51 @@ This package requires PHP 7.2 or later.
 
 ## Quick usage
 
-Configure base time, cap time and max attempts:
+Configure BackOff and ExceptionClassifier to retry your business logic when an exception will be thrown:
 
 ```php
 <?php
 
-use Orangesoft\Backoff\Duration\Milliseconds;
-use Orangesoft\Backoff\Duration\Seconds;
-use Orangesoft\Backoff\Duration\DurationInterface;
-use Orangesoft\Backoff\Factory\ExponentialBackoff;
-use Orangesoft\Backoff\Exception\LimitedAttemptsException;
+use Orangesoft\BackOff\Facade\ExponentialBackOff;
+use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
+use Orangesoft\BackOff\Retry\Retry;
 
-$baseTime = new Milliseconds(1000);
-$capTime = new Seconds(60);
 $maxAttempts = 5;
+$baseTimeMs = 1000;
 
-$backoff = new ExponentialBackoff($baseTime, $capTime, $maxAttempts);
+$backOff = new ExponentialBackOff($maxAttempts, $baseTimeMs);
 
-/** @var DurationInterface $backoffTime */
-$backoffTime = $backoff->generate($attempt = 4);
+$classifier = new ExceptionClassifier([
+    \RuntimeException::class,
+]);
 
-// float(16000)
-$backoffTime->asMilliseconds();
+$retry = new Retry($backOff, $classifier);
 ```
 
-To process cases when max attempts is already exceeded catch [LimitedAttemptsException](https://github.com/Orangesoft-Development/backoff/blob/main/src/Exception/LimitedAttemptsException.php):
+Put the business logic in a callback function and call it:
 
 ```php
-try {
-    $backoff->generate($attempt = 10);
-} catch (LimitedAttemptsException $e) {
-    // ...
-}
+$retry->call(function (): int {
+    $random = mt_rand(5, 10);
+    
+    if (0 === $random % 2) {
+        throw new \RuntimeException();
+    }
+    
+    return $random;
+});
 ```
 
-The count of the number of attempts starts at zero.
+After the exception is thrown call will be retried with a back-off time until max attempts has been reached.
 
 ## Documentation
 
-- [Configure Backoff](docs/index.md#configure-backoff)
+- [Configure Generator](docs/index.md#configure-generator)
 - [Enable Jitter](docs/index.md#enable-jitter)
-- [Use Factory](docs/index.md#use-factory)
-- [Sleep with Backoff](docs/index.md#sleep-with-backoff)
-- [Retry for exceptions](docs/index.md#retry-for-exceptions)
-- [Handle limited attempts](docs/index.md#handle-limited-attempts)
+- [Sleep by Duration](docs/index.md#sleep-by-duration)
+- [Handle max attempts](docs/index.md#handle-max-attempts)
+- [Use BackOff](docs/index.md#use-backoff)
+- [Create BackOff facades](docs/index.md#create-backoff-facades)
+- [Retry exceptions](docs/index.md#retry-exceptions)
 
-Read more about ExponentialBackoff and Jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).
+Read more about Back-off and Jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).
