@@ -1,20 +1,20 @@
 <?php
 
-namespace Orangesoft\Backoff\Tests\Strategy;
+namespace Orangesoft\BackOff\Tests\Strategy;
 
 use PHPUnit\Framework\TestCase;
-use Orangesoft\Backoff\Duration\Milliseconds;
-use Orangesoft\Backoff\Strategy\DecorrelationJitterStrategy;
+use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Strategy\DecorrelationJitterStrategy;
 
 class DecorrelationJitterStrategyTest extends TestCase
 {
-    public function testWaitTime(): void
+    public function testCalculate(): void
     {
-        $strategy = new DecorrelationJitterStrategy(new Milliseconds(1000));
+        $strategy = new DecorrelationJitterStrategy(3);
 
-        $waitTime = $strategy->getWaitTime(0);
+        $duration = $strategy->calculate(new Milliseconds(1000), 0);
 
-        $this->assertGreaterThanOrEqual(1000, $waitTime->asMilliseconds());
-        $this->assertLessThanOrEqual(3000, $waitTime->asMilliseconds());
+        $this->assertGreaterThanOrEqual(1000, $duration->asMilliseconds());
+        $this->assertLessThanOrEqual(3000, $duration->asMilliseconds());
     }
 }

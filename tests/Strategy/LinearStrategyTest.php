@@ -1,19 +1,19 @@
 <?php
 
-namespace Orangesoft\Backoff\Tests\Strategy;
+namespace Orangesoft\BackOff\Tests\Strategy;
 
 use PHPUnit\Framework\TestCase;
-use Orangesoft\Backoff\Duration\Milliseconds;
-use Orangesoft\Backoff\Strategy\LinearStrategy;
+use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Strategy\LinearStrategy;
 
 class LinearStrategyTest extends TestCase
 {
-    public function testWaitTime(): void
+    public function testCalculate(): void
     {
-        $strategy = new LinearStrategy(new Milliseconds(1000));
+        $strategy = new LinearStrategy();
 
-        $waitTime = $strategy->getWaitTime(4);
+        $duration = $strategy->calculate(new Milliseconds(1000), 3);
 
-        $this->assertEquals(5000, $waitTime->asMilliseconds());
+        $this->assertEquals(4000, $duration->asMilliseconds());
     }
 }

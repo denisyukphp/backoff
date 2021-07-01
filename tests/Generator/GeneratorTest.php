@@ -1,57 +1,52 @@
 <?php
 
-namespace Orangesoft\BackOff\Tests\Config;
+namespace Orangesoft\BackOff\Tests\Generator;
 
 use PHPUnit\Framework\TestCase;
-use Orangesoft\BackOff\Config\Config;
-use Orangesoft\BackOff\Config\ConfigBuilder;
-use Orangesoft\BackOff\Jitter\EqualJitter;
-use Orangesoft\BackOff\Jitter\JitterInterface;
+use Orangesoft\BackOff\Generator\GeneratorBuilder;
 use Orangesoft\BackOff\Duration\Milliseconds;
 use Orangesoft\BackOff\Duration\DurationInterface;
+use Orangesoft\BackOff\Strategy\LinearStrategy;
+use Orangesoft\BackOff\Generator\Exception\MaxAttemptsException;
 
-class ConfigTest extends TestCase
+class GeneratorTest extends TestCase
 {
-    public function testCapTime(): void
+    public function testGenerate(): void
     {
-        $builder = (new ConfigBuilder())->setCapTime(new Milliseconds(1000));
+        $generator = GeneratorBuilder::create()
+            ->setBaseTime(new Milliseconds(1000))
+            ->setCapTime(new Milliseconds(60 * 1000))
+            ->setStrategy(new LinearStrategy())
+            ->build()
+        ;
 
-        $config = new Config($builder);
+        $duration = $generator->generate(3);
 
-        $this->assertInstanceOf(DurationInterface::class, $config->getCapTime());
+        $this->assertInstanceOf(DurationInterface::class, $duration);
+
+        $this->assertEquals(4000, $duration->asMilliseconds());
     }
 
-    public function testMaxAttempts(): void
+    public function testGenerateCapTime(): void
     {
-        $builder = (new ConfigBuilder())->setMaxAttempts(5);
+        $generator = GeneratorBuilder::create()
+            ->setBaseTime(new Milliseconds(1000))
+            ->setCapTime(new Milliseconds(500))
+            ->setStrategy(new LinearStrategy())
+            ->build()
+        ;
 
-        $config = new Config($builder);
+        $duration = $generator->generate(3);
 
-        $this->assertEquals(5, $config->getMaxAttempts());
+        $this->assertEquals(500, $duration->asMilliseconds());
     }
 
-    public function testDisabledJitter(): void
+    public function testGenerateMaxAttemptsReached(): void
     {
-        $config = new Config(new ConfigBuilder());
+        $generator = GeneratorBuilder::create()->setMaxAttempts(3)->build();
 
-        $this->assertFalse($config->isJitterEnabled());
-    }
+        $this->expectException(MaxAttemptsException::class);
 
-    public function testEnabledJitter(): void
-    {
-        $builder = (new ConfigBuilder())->enableJitter();
-
-        $config = new Config($builder);
-
-        $this->assertTrue($config->isJitterEnabled());
-    }
-
-    public function testJitter(): void
-    {
-        $builder = (new ConfigBuilder())->setJitter(new EqualJitter());
-
-        $config = new Config($builder);
-
-        $this->assertInstanceOf(JitterInterface::class, $config->getJitter());
+        $generator->generate(3);
     }
 }

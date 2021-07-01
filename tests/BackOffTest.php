@@ -1,69 +1,51 @@
 <?php
 
-namespace Orangesoft\Backoff\Tests;
+namespace Orangesoft\BackOff\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Orangesoft\Backoff\Strategy\LinearStrategy;
-use Orangesoft\Backoff\Duration\Milliseconds;
-use Orangesoft\Backoff\Config\ConfigBuilder;
-use Orangesoft\Backoff\Jitter\EqualJitter;
-use Orangesoft\Backoff\Exception\LimitedAttemptsException;
-use Orangesoft\Backoff\Backoff;
+use SebastianBergmann\Timer\Timer;
+use Orangesoft\BackOff\Generator\GeneratorBuilder;
+use Orangesoft\BackOff\Sleeper\Sleeper;
+use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Strategy\ConstantStrategy;
+use Orangesoft\BackOff\BackOff;
 
-class BackoffTest extends TestCase
+class BackOffTest extends TestCase
 {
-    public function testMaxAttemptsSuccess(): void
+    public function testBackOff(): void
     {
-        $strategy = new LinearStrategy(new Milliseconds(1000));
-
-        $config = (new ConfigBuilder())->setMaxAttempts(5)->build();
-
-        $backoff = new Backoff($strategy, $config);
-
-        $backoffTime = $backoff->generate(4);
-
-        $this->assertEquals(5000, $backoffTime->asMilliseconds());
-    }
-
-    public function testMaxAttemptsFail(): void
-    {
-        $strategy = new LinearStrategy(new Milliseconds(1000));
-
-        $config = (new ConfigBuilder())->setMaxAttempts(5)->build();
-
-        $backoff = new Backoff($strategy, $config);
-
-        $this->expectException(LimitedAttemptsException::class);
-
-        $backoff->generate(5);
-    }
-
-    public function testCapTime(): void
-    {
-        $strategy = new LinearStrategy(new Milliseconds(1000 * 60));
-
-        $config = (new ConfigBuilder())->setCapTime(new Milliseconds(1000 * 60))->build();
-
-        $backoff = new Backoff($strategy, $config);
-
-        $backoffTime = $backoff->generate(1);
-
-        $this->assertEquals(1000 * 60, $backoffTime->asMilliseconds());
-    }
-
-    public function testJitterTime(): void
-    {
-        $strategy = new LinearStrategy(new Milliseconds(1000));
-
-        $config = (new ConfigBuilder())
-            ->setJitter(new EqualJitter())
+        $generator = GeneratorBuilder::create()
+            ->setBaseTime(new Milliseconds(500))
+            ->setCapTime(new Milliseconds(60 * 1000))
+            ->setStrategy(new ConstantStrategy())
             ->build()
         ;
 
-        $backoff = new Backoff($strategy, $config);
+        $sleeper = new Sleeper();
 
-        $backoffTime = $backoff->generate(4);
+        $backOff = new BackOff($generator, $sleeper);
 
-        $this->assertNotEquals(4000, $backoffTime->asMilliseconds());
+        $timer = new Timer();
+
+        $timer->start();
+
+        $backOff->backOff(0, new \RuntimeException());
+
+        $milliseconds = $timer->stop() * 1000;
+
+        $this->assertGreaterThanOrEqual(500, $milliseconds);
+    }
+
+    public function testBackOffThrowable(): void
+    {
+        $generator = GeneratorBuilder::create()->setMaxAttempts(3)->build();
+
+        $sleeper = new Sleeper();
+
+        $backOff = new BackOff($generator, $sleeper);
+
+        $this->expectException(\RuntimeException::class);
+
+        $backOff->backOff(3, new \RuntimeException());
     }
 }

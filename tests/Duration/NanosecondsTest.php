@@ -1,9 +1,9 @@
 <?php
 
-namespace Orangesoft\Backoff\Tests\Duration;
+namespace Orangesoft\BackOff\Tests\Duration;
 
 use PHPUnit\Framework\TestCase;
-use Orangesoft\Backoff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Duration\Nanoseconds;
 
 class NanosecondsTest extends TestCase
 {

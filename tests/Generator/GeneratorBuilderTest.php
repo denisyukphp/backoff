@@ -1,71 +1,85 @@
 <?php
 
-namespace Orangesoft\Backoff\Tests\Config;
+namespace Orangesoft\BackOff\Tests\Generator;
 
 use PHPUnit\Framework\TestCase;
-use Orangesoft\Backoff\Config\ConfigBuilder;
-use Orangesoft\Backoff\Config\ConfigInterface;
-use Orangesoft\Backoff\Jitter\EqualJitter;
-use Orangesoft\Backoff\Jitter\JitterInterface;
-use Orangesoft\Backoff\Duration\Milliseconds;
-use Orangesoft\Backoff\Duration\DurationInterface;
+use Orangesoft\BackOff\Generator\Generator;
+use Orangesoft\BackOff\Generator\GeneratorBuilder;
+use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Duration\DurationInterface;
+use Orangesoft\BackOff\Strategy\ConstantStrategy;
+use Orangesoft\BackOff\Strategy\LinearStrategy;
+use Orangesoft\BackOff\Strategy\StrategyInterface;
+use Orangesoft\BackOff\Jitter\DummyJitter;
+use Orangesoft\BackOff\Jitter\FullJitter;
+use Orangesoft\BackOff\Jitter\JitterInterface;
 
-class ConfigBuilderTest extends TestCase
+class GeneratorBuilderTest extends TestCase
 {
-    public function testDefaults(): void
+    public function testCreate(): void
     {
-        $configBuilder = new ConfigBuilder();
+        $builder = GeneratorBuilder::create();
 
-        $this->assertEquals(60, $configBuilder->getCapTime()->asSeconds());
-        $this->assertEquals(INF, $configBuilder->getMaxAttempts());
-        $this->assertSame(false, $configBuilder->isJitterEnabled());
-        $this->assertInstanceOf(EqualJitter::class, $configBuilder->getJitter());
+        $this->assertInstanceOf(GeneratorBuilder::class, $builder);
     }
 
-    public function testCapTime(): void
+    public function testDefaults(): void
     {
-        $configBuilder = (new ConfigBuilder())->setCapTime(new Milliseconds(1000));
+        $builder = GeneratorBuilder::create();
 
-        $this->assertInstanceOf(DurationInterface::class, $configBuilder->getCapTime());
+        $this->assertSame(INF, $builder->getMaxAttempts());
+        $this->assertEquals(1000, $builder->getBaseTime()->asMilliseconds());
+        $this->assertEquals(60 * 1000, $builder->getCapTime()->asMilliseconds());
+        $this->assertInstanceOf(ConstantStrategy::class, $builder->getStrategy());
+        $this->assertInstanceOf(DummyJitter::class, $builder->getJitter());
     }
 
     public function testMaxAttempts(): void
     {
-        $configBuilder = (new ConfigBuilder())->setMaxAttempts(5);
+        $builder = GeneratorBuilder::create()->setMaxAttempts(3);
 
-        $this->assertEquals(5, $configBuilder->getMaxAttempts());
+        $this->assertEquals(3, $builder->getMaxAttempts());
     }
 
-    public function testDisabledJitter(): void
+    public function testMaxAttemptsInf(): void
     {
-        $configBuilder = new ConfigBuilder();
+        $builder = GeneratorBuilder::create()->setMaxAttempts(INF);
 
-        $this->assertFalse($configBuilder->isJitterEnabled());
+        $this->assertEquals(INF, $builder->getMaxAttempts());
     }
 
-    public function testEnabledJitter(): void
+    public function testBaseTime(): void
     {
-        $configBuilder = (new ConfigBuilder())->enableJitter();
+        $builder = GeneratorBuilder::create()->setBaseTime(new Milliseconds(1000));
 
-        $this->assertTrue($configBuilder->isJitterEnabled());
+        $this->assertInstanceOf(DurationInterface::class, $builder->getBaseTime());
+    }
+
+    public function testCapTime(): void
+    {
+        $builder = GeneratorBuilder::create()->setCapTime(new Milliseconds(1000));
+
+        $this->assertInstanceOf(DurationInterface::class, $builder->getCapTime());
+    }
+
+    public function testStrategy(): void
+    {
+        $builder = GeneratorBuilder::create()->setStrategy(new LinearStrategy());
+
+        $this->assertInstanceOf(StrategyInterface::class, $builder->getStrategy());
     }
 
     public function testJitter(): void
     {
-        $configBuilder = (new ConfigBuilder())->setJitter(new EqualJitter());
+        $builder = GeneratorBuilder::create()->setJitter(new FullJitter());
 
-        $this->assertInstanceOf(JitterInterface::class, $configBuilder->getJitter());
+        $this->assertInstanceOf(JitterInterface::class, $builder->getJitter());
     }
 
     public function testBuild(): void
     {
-        $config = (new ConfigBuilder())
-            ->setCapTime(new Milliseconds(1000))
-            ->setMaxAttempts(5)
-            ->setJitter(new EqualJitter())
-            ->build()
-        ;
+        $generator = GeneratorBuilder::create()->build();
 
-        $this->assertInstanceOf(ConfigInterface::class, $config);
+        $this->assertInstanceOf(Generator::class, $generator);
     }
 }
