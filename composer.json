@@ -1,7 +1,7 @@
 {
     "name": "orangesoft/backoff",
     "description": "Back-off algorithm implementation",
-    "keywords": ["backoff", "exponential", "jitter", "sleeper", "retry"],
+    "keywords": ["backoff", "exponential", "linear", "constant", "decorrelation", "jitter", "sleeper", "retry"],
     "license": "MIT",
     "authors": [
         {
