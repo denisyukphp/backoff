@@ -8,7 +8,7 @@ final class Sleeper implements SleeperInterface
 {
     public function sleep(DurationInterface $duration): void
     {
-        $microseconds = $duration->asMicroseconds();
+        $microseconds = (int) $duration->asMicroseconds();
 
         usleep($microseconds);
     }
