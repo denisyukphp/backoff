@@ -32,12 +32,12 @@ $generator = GeneratorBuilder::create()
 Generator returns a duration time to sleep:
 
 ```php
-$attempt = 5;
+$attempt = 3;
 
 /** @var DurationInterface $duration */
 $duration = $generator->generate($attempt);
 
-// float(32000)
+// float(8000)
 $duration->asMilliseconds();
 ```
 
@@ -84,12 +84,12 @@ $generator = GeneratorBuilder::create()
     ->build()
 ;
 
-$attempt = 5;
+$attempt = 3;
 
 /** @var DurationInterface $duration */
 $duration = $generator->generate($attempt);
 
-// usleep(32000000)
+// usleep(8000000)
 $sleeper->sleep($duration);
 ```
 
@@ -117,7 +117,7 @@ use Orangesoft\BackOff\Generator\GeneratorBuilder;
 use Orangesoft\BackOff\Generator\Exception\MaxAttemptsException;
 
 $generator = GeneratorBuilder::create()
-    ->setMaxAttempts(5)
+    ->setMaxAttempts(3)
     ->build()
 ;
 
@@ -144,7 +144,7 @@ use Orangesoft\BackOff\Sleeper\Sleeper;
 use Orangesoft\BackOff\BackOff;
 
 $generator = GeneratorBuilder::create()
-    ->setMaxAttempts(5)
+    ->setMaxAttempts(3)
     ->build()
 ;
 
@@ -172,7 +172,7 @@ use Orangesoft\BackOff\Facade\ExponentialBackOff;
 use Orangesoft\BackOff\Jitter\DummyJitter;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 
-$maxAttempts = 5;
+$maxAttempts = 3;
 $baseTimeMs = 1000;
 $capTimeMs = 60 * 1000;
 $multiplier = 2;
@@ -200,7 +200,7 @@ use Orangesoft\BackOff\Facade\ExponentialBackOff;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
 use Orangesoft\BackOff\Retry\Retry;
 
-$maxAttempts = 5;
+$maxAttempts = 3;
 $baseTimeMs = 1000;
 
 $backOff = new ExponentialBackOff($maxAttempts, $baseTimeMs);
