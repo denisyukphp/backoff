@@ -20,7 +20,7 @@ final class ExponentialBackOff implements BackOffInterface
     private $backOff;
 
     public function __construct(
-        float $maxAttempts = 5,
+        float $maxAttempts = 3,
         int $baseTimeMs = 1000,
         int $capTimeMs = 60 * 1000,
         int $multiplier = 2,
@@ -28,7 +28,9 @@ final class ExponentialBackOff implements BackOffInterface
         ?SleeperInterface $sleeper = null
     ) {
         $jitter = $jitter ?? new DummyJitter();
+
         $sleeper = $sleeper ?? new Sleeper();
+
         $generator = GeneratorBuilder::create()
             ->setMaxAttempts($maxAttempts)
             ->setBaseTime(new Milliseconds($baseTimeMs))
