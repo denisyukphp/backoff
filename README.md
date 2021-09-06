@@ -29,7 +29,7 @@ use Orangesoft\BackOff\Facade\ExponentialBackOff;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
 use Orangesoft\BackOff\Retry\Retry;
 
-$maxAttempts = 5;
+$maxAttempts = 3;
 $baseTimeMs = 1000;
 
 $backOff = new ExponentialBackOff($maxAttempts, $baseTimeMs);
