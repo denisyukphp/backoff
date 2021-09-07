@@ -34,11 +34,11 @@ $baseTimeMs = 1000;
 
 $backOff = new ExponentialBackOff($maxAttempts, $baseTimeMs);
 
-$classifier = new ExceptionClassifier([
+$exceptionClassifier = new ExceptionClassifier([
     \RuntimeException::class,
 ]);
 
-$retry = new Retry($backOff, $classifier);
+$retry = new Retry($backOff, $exceptionClassifier);
 ```
 
 Put the business logic in a callback function and call it:
