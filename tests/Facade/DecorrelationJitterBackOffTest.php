@@ -3,7 +3,6 @@
 namespace Orangesoft\BackOff\Tests\Facade;
 
 use PHPUnit\Framework\TestCase;
-use Orangesoft\BackOff\BackOffInterface;
 use Orangesoft\BackOff\Facade\DecorrelationJitterBackOff;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 
@@ -18,8 +17,6 @@ class DecorrelationJitterBackOffTest extends TestCase
         $sleeper = new Sleeper();
 
         $backOff = new DecorrelationJitterBackOff($maxAttempts, $baseTimeMs, $capTimeMs, $multiplier, $sleeper);
-
-        $this->assertInstanceOf(BackOffInterface::class, $backOff);
 
         $this->expectException(\RuntimeException::class);
 

@@ -31,11 +31,11 @@ class RetryTest extends TestCase
     {
         $backOff = new ConstantBackOff(0, 0);
 
-        $classifier = new ExceptionClassifier([
+        $exceptionClassifier = new ExceptionClassifier([
             \RuntimeException::class,
         ]);
 
-        $retry = new Retry($backOff, $classifier);
+        $retry = new Retry($backOff, $exceptionClassifier);
 
         $this->expectException(\RuntimeException::class);
 
@@ -46,20 +46,20 @@ class RetryTest extends TestCase
 
     public function testAttemptsCounter(): void
     {
-        $counter = new BackOffCounter(3);
+        $attemptsCounter = new AttemptsCounter(3);
 
-        $classifier = new ExceptionClassifier([
+        $exceptionClassifier = new ExceptionClassifier([
             \RuntimeException::class,
         ]);
 
-        $retry = new Retry($counter, $classifier);
+        $retry = new Retry($attemptsCounter, $exceptionClassifier);
 
         try {
             $retry->call(function () {
                 throw new \RuntimeException();
             });
         } catch (\RuntimeException $e) {
-            $this->assertSame(3, $counter->getLastAttempt());
+            $this->assertSame(3, $attemptsCounter->getLastAttempt());
         }
     }
 }

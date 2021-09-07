@@ -10,9 +10,9 @@ class DecorrelationJitterStrategyTest extends TestCase
 {
     public function testCalculate(): void
     {
-        $strategy = new DecorrelationJitterStrategy(3);
+        $decorrelationJitterStrategy = new DecorrelationJitterStrategy(3);
 
-        $duration = $strategy->calculate(new Milliseconds(1000), 0);
+        $duration = $decorrelationJitterStrategy->calculate(new Milliseconds(1000), 0);
 
         $this->assertGreaterThanOrEqual(1000, $duration->asMilliseconds());
         $this->assertLessThanOrEqual(3000, $duration->asMilliseconds());

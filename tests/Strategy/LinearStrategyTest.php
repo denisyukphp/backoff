@@ -10,9 +10,9 @@ class LinearStrategyTest extends TestCase
 {
     public function testCalculate(): void
     {
-        $strategy = new LinearStrategy();
+        $linearStrategy = new LinearStrategy();
 
-        $duration = $strategy->calculate(new Milliseconds(1000), 3);
+        $duration = $linearStrategy->calculate(new Milliseconds(1000), 3);
 
         $this->assertEquals(4000, $duration->asMilliseconds());
     }

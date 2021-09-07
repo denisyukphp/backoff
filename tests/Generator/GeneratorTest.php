@@ -5,7 +5,6 @@ namespace Orangesoft\BackOff\Tests\Generator;
 use PHPUnit\Framework\TestCase;
 use Orangesoft\BackOff\Generator\GeneratorBuilder;
 use Orangesoft\BackOff\Duration\Milliseconds;
-use Orangesoft\BackOff\Duration\DurationInterface;
 use Orangesoft\BackOff\Strategy\LinearStrategy;
 use Orangesoft\BackOff\Generator\Exception\MaxAttemptsException;
 
@@ -21,8 +20,6 @@ class GeneratorTest extends TestCase
         ;
 
         $duration = $generator->generate(3);
-
-        $this->assertInstanceOf(DurationInterface::class, $duration);
 
         $this->assertEquals(4000, $duration->asMilliseconds());
     }

@@ -10,9 +10,9 @@ class ExponentialStrategyTest extends TestCase
 {
     public function testCalculate(): void
     {
-        $strategy = new ExponentialStrategy(2);
+        $exponentialStrategy = new ExponentialStrategy(2);
 
-        $duration = $strategy->calculate(new Milliseconds(1000), 3);
+        $duration = $exponentialStrategy->calculate(new Milliseconds(1000), 3);
 
         $this->assertEquals(8000, $duration->asMilliseconds());
     }

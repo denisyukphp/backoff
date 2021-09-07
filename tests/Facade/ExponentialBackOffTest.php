@@ -3,7 +3,6 @@
 namespace Orangesoft\BackOff\Tests\Facade;
 
 use PHPUnit\Framework\TestCase;
-use Orangesoft\BackOff\BackOffInterface;
 use Orangesoft\BackOff\Facade\ExponentialBackOff;
 use Orangesoft\BackOff\Jitter\DummyJitter;
 use Orangesoft\BackOff\Sleeper\Sleeper;
@@ -20,8 +19,6 @@ class ExponentialBackOffTest extends TestCase
         $sleeper = new Sleeper();
 
         $backOff = new ExponentialBackOff($maxAttempts, $baseTimeMs, $capTimeMs, $multiplier, $jitter, $sleeper);
-
-        $this->assertInstanceOf(BackOffInterface::class, $backOff);
 
         $this->expectException(\RuntimeException::class);
 

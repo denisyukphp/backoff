@@ -4,21 +4,21 @@ namespace Orangesoft\BackOff\Tests\Retry;
 
 use Orangesoft\BackOff\BackOffInterface;
 
-class BackOffCounter implements BackOffInterface
+class AttemptsCounter implements BackOffInterface
 {
     /**
      * @var int
      */
-    private $maxAttempts;
+    private $lastAttempt;
     /**
      * @var int
      */
-    private $lastAttempt;
+    private $maxAttempts;
 
-    public function __construct(int $maxAttempts, int $lastAttempt = 0)
+    public function __construct(int $maxAttempts)
     {
+        $this->lastAttempt = 0;
         $this->maxAttempts = $maxAttempts;
-        $this->lastAttempt = $lastAttempt;
     }
 
     /**
