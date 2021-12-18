@@ -12,12 +12,11 @@
         }
     ],
     "require": {
-        "php": "^7.2 || ^8.0",
-        "symfony/polyfill-php80": "^1.23"
+        "php": "^8.1"
     },
     "require-dev": {
-        "phpunit/php-timer": "^2.1",
-        "phpunit/phpunit": "^8.5 || ^9.4"
+        "phpunit/php-timer": "^5.0",
+        "phpunit/phpunit": "^9.5"
     },
     "autoload": {
         "psr-4": {
