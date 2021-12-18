@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Orangesoft\BackOff\Strategy;
 
 use Orangesoft\BackOff\Duration\DurationInterface;
@@ -9,8 +11,6 @@ final class LinearStrategy implements StrategyInterface
 {
     public function calculate(DurationInterface $duration, int $attempt): DurationInterface
     {
-        $nanoseconds = $duration->asNanoseconds() * ($attempt + 1);
-
-        return new Nanoseconds($nanoseconds);
+        return new Nanoseconds($duration->asNanoseconds() * $attempt);
     }
 }

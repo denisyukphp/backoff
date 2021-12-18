@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Orangesoft\BackOff\Retry;
 
 use Orangesoft\BackOff\BackOffInterface;
@@ -7,39 +9,22 @@ use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifierInterface;
 
 final class Retry implements RetryInterface
 {
-    /**
-     * @var BackOffInterface
-     */
-    private $backOff;
-    /**
-     * @var ExceptionClassifierInterface
-     */
-    private $classifier;
-
-    public function __construct(BackOffInterface $backOff, ExceptionClassifierInterface $classifier)
-    {
-        $this->backOff = $backOff;
-        $this->classifier = $classifier;
+    public function __construct(
+        private BackOffInterface $backOff,
+        private ExceptionClassifierInterface $exceptionClassifier,
+    ) {
     }
 
-    /**
-     * @param callable $callback
-     * @param mixed[] $args
-     *
-     * @return mixed
-     *
-     * @throws \Throwable
-     */
-    public function call(callable $callback, array $args = [])
+    public function call(callable $callback, array $args = []): mixed
     {
-        $attempt = 0;
+        $attempt = 1;
 
         retrying:
 
         try {
             return $callback(...$args);
         } catch (\Throwable $throwable) {
-            if (!$this->classifier->classify($throwable)) {
+            if (!$this->exceptionClassifier->classify($throwable)) {
                 throw $throwable;
             }
 

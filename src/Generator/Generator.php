@@ -1,64 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Orangesoft\BackOff\Generator;
 
 use Orangesoft\BackOff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\Nanoseconds;
 use Orangesoft\BackOff\Strategy\StrategyInterface;
 use Orangesoft\BackOff\Jitter\JitterInterface;
-use Orangesoft\BackOff\Duration\Comparator;
-use Orangesoft\BackOff\Generator\Exception\MaxAttemptsException;
 
 final class Generator implements GeneratorInterface
 {
-    /**
-     * @var float
-     */
-    private $maxAttempts;
-    /**
-     * @var DurationInterface
-     */
-    private $baseTime;
-    /**
-     * @var DurationInterface
-     */
-    private $capTime;
-    /**
-     * @var StrategyInterface
-     */
-    private $strategy;
-    /**
-     * @var JitterInterface
-     */
-    private $jitter;
-
-    public function __construct(GeneratorBuilder $builder)
-    {
-        $this->maxAttempts = $builder->getMaxAttempts();
-        $this->baseTime = $builder->getBaseTime();
-        $this->capTime = $builder->getCapTime();
-        $this->strategy = $builder->getStrategy();
-        $this->jitter = $builder->getJitter();
+    public function __construct(
+        private DurationInterface $baseTime,
+        private DurationInterface $capTime,
+        private StrategyInterface $strategy,
+        private JitterInterface $jitter,
+    ) {
     }
 
-    /**
-     * @param int $attempt
-     *
-     * @return DurationInterface
-     *
-     * @throws MaxAttemptsException
-     */
     public function generate(int $attempt): DurationInterface
     {
-        if ($attempt >= $this->maxAttempts) {
-            throw new MaxAttemptsException('Max attempts has been reached');
-        }
-
         $sleepTime = $this->strategy->calculate($this->baseTime, $attempt);
 
-        $comparator = new Comparator($this->capTime, $sleepTime);
-
-        $duration = $comparator->getMin();
+        $duration = $this->min($this->capTime, $sleepTime);
 
         return $this->jitter->jitter($duration);
+    }
+
+    private function min(DurationInterface ...$durations): DurationInterface
+    {
+        $values = array_map(function (DurationInterface $duration): float {
+            return $duration->asNanoseconds();
+        }, $durations);
+
+        $nanoseconds = min($values);
+
+        return new Nanoseconds($nanoseconds);
     }
 }

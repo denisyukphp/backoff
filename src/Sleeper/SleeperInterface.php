@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Orangesoft\BackOff\Sleeper;
 
 use Orangesoft\BackOff\Duration\DurationInterface;

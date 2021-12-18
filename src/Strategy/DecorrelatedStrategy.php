@@ -7,15 +7,17 @@ namespace Orangesoft\BackOff\Strategy;
 use Orangesoft\BackOff\Duration\DurationInterface;
 use Orangesoft\BackOff\Duration\Nanoseconds;
 
-final class ExponentialStrategy implements StrategyInterface
+final class DecorrelatedStrategy implements StrategyInterface
 {
     public function __construct(
-        private int $multiplier = 2,
+        private int $multiplier = 3,
     ) {
     }
 
     public function calculate(DurationInterface $duration, int $attempt): DurationInterface
     {
-        return new Nanoseconds($duration->asNanoseconds() * ($this->multiplier ** $attempt));
+        $nanoseconds = (int) $duration->asNanoseconds();
+
+        return new Nanoseconds(mt_rand($nanoseconds, $nanoseconds * $this->multiplier * $attempt));
     }
 }

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Orangesoft\BackOff\Duration;
 
 final class Microseconds extends AbstractDuration
 {
-    public function __construct(float $microseconds)
+    public function __construct(int|float $microseconds)
     {
-        parent::__construct($microseconds * 1000);
+        parent::__construct($microseconds * 1_000);
     }
 }
