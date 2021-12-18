@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Orangesoft\BackOff\Tests\Sleeper;
 
+use Orangesoft\BackOff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Sleeper\Sleeper;
 use PHPUnit\Framework\TestCase;
 use SebastianBergmann\Timer\Timer;
-use Orangesoft\BackOff\Sleeper\Sleeper;
-use Orangesoft\BackOff\Duration\Milliseconds;
 
 class SleeperTest extends TestCase
 {
@@ -15,14 +17,14 @@ class SleeperTest extends TestCase
 
         $timer = new Timer();
 
-        $duration = new Milliseconds(500);
+        $milliseconds = new Nanoseconds(1_000);
 
         $timer->start();
 
-        $sleeper->sleep($duration);
+        $sleeper->sleep($milliseconds);
 
-        $milliseconds = $timer->stop() * 1000;
+        $duration = $timer->stop();
 
-        $this->assertGreaterThanOrEqual(500, $milliseconds);
+        $this->assertGreaterThanOrEqual(1_000, $duration->asNanoseconds());
     }
 }

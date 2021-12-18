@@ -1,65 +1,53 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Orangesoft\BackOff\Tests\Retry;
 
-use PHPUnit\Framework\TestCase;
-use Orangesoft\BackOff\Retry\Retry;
+use Orangesoft\BackOff\ImmediatelyThrowableBackOff;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
-use Orangesoft\BackOff\Facade\ConstantBackOff;
+use Orangesoft\BackOff\Retry\Retry;
+use PHPUnit\Framework\TestCase;
 
 class RetryTest extends TestCase
 {
     public function testReturnValue(): void
     {
         $retry = new Retry(
-            new ConstantBackOff(3, 1000),
-            new ExceptionClassifier()
+            backOff: new ImmediatelyThrowableBackOff(),
+            exceptionClassifier: new ExceptionClassifier(),
         );
 
-        $callback = function (int $a, int $b): int {
-            return $a + $b;
-        };
-
-        $args = [5, 10];
-
-        $result = $retry->call($callback, $args);
+        $result = $retry->call(fn(int $a, int $b): int => $a + $b, [5, 10]);
 
         $this->assertSame(15, $result);
     }
 
     public function testThrowException(): void
     {
-        $backOff = new ConstantBackOff(0, 0);
+        $retry = new Retry(
+            backOff: new ImmediatelyThrowableBackOff(),
+            exceptionClassifier: new ExceptionClassifier(),
+        );
 
-        $exceptionClassifier = new ExceptionClassifier([
-            \RuntimeException::class,
-        ]);
+        $throwable = new \Exception();
 
-        $retry = new Retry($backOff, $exceptionClassifier);
+        $this->expectExceptionObject($throwable);
 
-        $this->expectException(\RuntimeException::class);
-
-        $retry->call(function () {
-            throw new \RuntimeException();
-        });
+        $retry->call(fn() => throw $throwable);
     }
 
     public function testAttemptsCounter(): void
     {
-        $attemptsCounter = new AttemptsCounter(3);
-
-        $exceptionClassifier = new ExceptionClassifier([
-            \RuntimeException::class,
-        ]);
-
-        $retry = new Retry($attemptsCounter, $exceptionClassifier);
+        $retry = new Retry(
+            backOff: $attemptsCounterBackOff = new AttemptsCounterBackOff(maxAttempts: 3),
+            exceptionClassifier: new ExceptionClassifier(),
+        );
 
         try {
-            $retry->call(function () {
-                throw new \RuntimeException();
-            });
-        } catch (\RuntimeException $e) {
-            $this->assertSame(3, $attemptsCounter->getLastAttempt());
+            $retry->call(fn() => throw new \Exception());
+        } catch (\Exception) {
+            $this->assertSame(3, $attemptsCounterBackOff->getLastAttempt());
         }
     }
 }

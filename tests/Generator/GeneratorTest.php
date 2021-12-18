@@ -1,49 +1,59 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Orangesoft\BackOff\Tests\Generator;
 
-use PHPUnit\Framework\TestCase;
-use Orangesoft\BackOff\Generator\GeneratorBuilder;
-use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Generator\Generator;
+use Orangesoft\BackOff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Strategy\ConstantStrategy;
 use Orangesoft\BackOff\Strategy\LinearStrategy;
-use Orangesoft\BackOff\Generator\Exception\MaxAttemptsException;
+use Orangesoft\BackOff\Jitter\NullJitter;
+use Orangesoft\BackOff\Jitter\EqualJitter;
+use PHPUnit\Framework\TestCase;
 
 class GeneratorTest extends TestCase
 {
-    public function testGenerate(): void
+    public function testMinTime(): void
     {
-        $generator = GeneratorBuilder::create()
-            ->setBaseTime(new Milliseconds(1000))
-            ->setCapTime(new Milliseconds(60 * 1000))
-            ->setStrategy(new LinearStrategy())
-            ->build()
-        ;
+        $generator = new Generator(
+            baseTime: new Nanoseconds(1_000),
+            capTime: new Nanoseconds(60_000),
+            strategy: new ConstantStrategy(),
+            jitter: new NullJitter(),
+        );
+
+        $duration = $generator->generate(1);
+
+        $this->assertEquals(1_000, $duration->asNanoseconds());
+    }
+
+    public function testMaxTime(): void
+    {
+        $generator = new Generator(
+            baseTime: new Nanoseconds(60_000),
+            capTime: new Nanoseconds(1_000),
+            strategy: new ConstantStrategy(),
+            jitter: new NullJitter(),
+        );
+
+        $duration = $generator->generate(1);
+
+        $this->assertEquals(1_000, $duration->asNanoseconds());
+    }
+
+    public function testReturnDuration(): void
+    {
+        $generator = new Generator(
+            baseTime: new Nanoseconds(1_000),
+            capTime: new Nanoseconds(60_000),
+            strategy: new LinearStrategy(),
+            jitter: new EqualJitter(),
+        );
 
         $duration = $generator->generate(3);
 
-        $this->assertEquals(4000, $duration->asMilliseconds());
-    }
-
-    public function testGenerateCapTime(): void
-    {
-        $generator = GeneratorBuilder::create()
-            ->setBaseTime(new Milliseconds(1000))
-            ->setCapTime(new Milliseconds(500))
-            ->setStrategy(new LinearStrategy())
-            ->build()
-        ;
-
-        $duration = $generator->generate(3);
-
-        $this->assertEquals(500, $duration->asMilliseconds());
-    }
-
-    public function testGenerateMaxAttemptsReached(): void
-    {
-        $generator = GeneratorBuilder::create()->setMaxAttempts(3)->build();
-
-        $this->expectException(MaxAttemptsException::class);
-
-        $generator->generate(3);
+        $this->assertGreaterThanOrEqual(1_500, $duration->asNanoseconds());
+        $this->assertLessThanOrEqual(3_000, $duration->asNanoseconds());
     }
 }

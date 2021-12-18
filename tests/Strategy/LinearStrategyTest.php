@@ -1,19 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Orangesoft\BackOff\Tests\Strategy;
 
-use PHPUnit\Framework\TestCase;
-use Orangesoft\BackOff\Duration\Milliseconds;
 use Orangesoft\BackOff\Strategy\LinearStrategy;
+use Orangesoft\BackOff\Duration\Nanoseconds;
+use PHPUnit\Framework\TestCase;
 
 class LinearStrategyTest extends TestCase
 {
-    public function testCalculate(): void
+    /**
+     * @dataProvider expectedNanosecondsDataset
+     */
+    public function testCalculate(int $attempt, int $expectedNanoseconds): void
     {
         $linearStrategy = new LinearStrategy();
 
-        $duration = $linearStrategy->calculate(new Milliseconds(1000), 3);
+        $duration = $linearStrategy->calculate(new Nanoseconds(1_000), $attempt);
 
-        $this->assertEquals(4000, $duration->asMilliseconds());
+        $this->assertEquals($expectedNanoseconds, $duration->asNanoseconds());
+    }
+
+    public function expectedNanosecondsDataset(): array
+    {
+        return [
+            [1, 1_000],
+            [2, 2_000],
+            [3, 3_000],
+        ];
     }
 }

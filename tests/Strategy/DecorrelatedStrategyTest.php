@@ -8,16 +8,16 @@ use Orangesoft\BackOff\Strategy\DecorrelatedStrategy;
 use Orangesoft\BackOff\Duration\Nanoseconds;
 use PHPUnit\Framework\TestCase;
 
-class DecorrelationJitterStrategyTest extends TestCase
+class DecorrelatedStrategyTest extends TestCase
 {
     /**
      * @dataProvider expectedNanosecondsDataset
      */
     public function testCalculate(int $attempt, int $expectedNanosecondsMin, int $expectedNanosecondsMax): void
     {
-        $decorrelationJitterStrategy = new DecorrelatedStrategy(multiplier: 3);
+        $decorrelatedStrategy = new DecorrelatedStrategy(multiplier: 3);
 
-        $duration = $decorrelationJitterStrategy->calculate(new Nanoseconds(1_000), $attempt);
+        $duration = $decorrelatedStrategy->calculate(new Nanoseconds(1_000), $attempt);
 
         $this->assertGreaterThanOrEqual($expectedNanosecondsMin, $duration->asNanoseconds());
         $this->assertLessThanOrEqual($expectedNanosecondsMax, $duration->asNanoseconds());

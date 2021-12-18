@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Orangesoft\BackOff\Tests\Jitter;
 
-use PHPUnit\Framework\TestCase;
-use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Duration\Nanoseconds;
 use Orangesoft\BackOff\Jitter\FullJitter;
+use PHPUnit\Framework\TestCase;
 
 class FullJitterTest extends TestCase
 {
@@ -12,9 +14,9 @@ class FullJitterTest extends TestCase
     {
         $fullJitter = new FullJitter();
 
-        $duration = $fullJitter->jitter(new Milliseconds(1000));
+        $duration = $fullJitter->jitter(new Nanoseconds(1_000));
 
-        $this->assertGreaterThanOrEqual(0, $duration->asMilliseconds());
-        $this->assertLessThanOrEqual(1000, $duration->asMilliseconds());
+        $this->assertGreaterThanOrEqual(0, $duration->asNanoseconds());
+        $this->assertLessThanOrEqual(1_000, $duration->asNanoseconds());
     }
 }
