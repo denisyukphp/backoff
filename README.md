@@ -16,7 +16,7 @@ You can install the latest version via [Composer](https://getcomposer.org/):
 composer require orangesoft/backoff
 ```
 
-This package requires PHP 7.2 or later.
+This package requires PHP 8.1 or later.
 
 ## Quick usage
 
@@ -25,14 +25,16 @@ Configure BackOff and ExceptionClassifier to retry your business logic when an e
 ```php
 <?php
 
-use Orangesoft\BackOff\Facade\ExponentialBackOff;
+use Orangesoft\BackOff\ExponentialBackOff;
+use Orangesoft\BackOff\Duration\Milliseconds;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
 use Orangesoft\BackOff\Retry\Retry;
 
-$maxAttempts = 3;
-$baseTimeMs = 1000;
-
-$backOff = new ExponentialBackOff($maxAttempts, $baseTimeMs);
+$backOff = new ExponentialBackOff(
+    maxAttempts: 3,
+    baseTime: new Milliseconds(1_000),
+    capTime: new Milliseconds(60_000),
+);
 
 $exceptionClassifier = new ExceptionClassifier([
     \RuntimeException::class,
@@ -61,10 +63,8 @@ After the exception is thrown call will be retried with a back-off time until ma
 
 - [Configure Generator](docs/index.md#configure-generator)
 - [Enable Jitter](docs/index.md#enable-jitter)
-- [Sleep by Duration](docs/index.md#sleep-by-duration)
-- [Handle max attempts](docs/index.md#handle-max-attempts)
+- [Duration sleep](docs/index.md#duration-sleep)
 - [Use BackOff](docs/index.md#use-backoff)
-- [Create BackOff facades](docs/index.md#create-backoff-facades)
 - [Retry exceptions](docs/index.md#retry-exceptions)
 
 Read more about Back-off and Jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).
