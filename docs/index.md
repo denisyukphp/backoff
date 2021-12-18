@@ -2,40 +2,36 @@
 
 - [Configure Generator](#configure-generator)
 - [Enable Jitter](#enable-jitter)
-- [Sleep by Duration](#sleep-by-duration)
-- [Handle max attempts](#handle-max-attempts)
+- [Duration sleep](#duration-sleep)
 - [Use BackOff](#use-backoff)
-- [Create BackOff facades](#create-backoff-facades)
 - [Retry exceptions](#retry-exceptions)
 
 ## Configure Generator
 
-Configure max attempts, base time, cap time and strategy. All options are not required. By default max attempts is `INF`, base time is 1 second, cap time is 1 minute, strategy is exponential with multiplier is 2.
+Configure base time, cap time, strategy and jitter. All options are required:
 
 ```php
 <?php
 
-use Orangesoft\BackOff\Generator\GeneratorBuilder;
+use Orangesoft\BackOff\Generator\Generator;
 use Orangesoft\BackOff\Duration\DurationInterface;
 use Orangesoft\BackOff\Duration\Milliseconds;
 use Orangesoft\BackOff\Strategy\ExponentialStrategy;
+use Orangesoft\BackOff\Jitter\NullJitter;
 
-$generator = GeneratorBuilder::create()
-    ->setMaxAttempts(INF)
-    ->setBaseTime(new Milliseconds(1000))
-    ->setCapTime(new Milliseconds(60 * 1000))
-    ->setStrategy(new ExponentialStrategy(2))
-    ->build()
-;
+$generator = new Generator(
+    baseTime: new Milliseconds(1_000),
+    capTime: new Milliseconds(60_000),
+    strategy: new ExponentialStrategy(multiplier: 2),
+    jitter: new NullJitter(),
+);
 ```
 
 Generator returns a duration time to sleep:
 
 ```php
-$attempt = 3;
-
 /** @var DurationInterface $duration */
-$duration = $generator->generate($attempt);
+$duration = $generator->generate(attempt: 3);;
 
 // float(8000)
 $duration->asMilliseconds();
@@ -45,55 +41,58 @@ As a result, you can work with such values of time as seconds, milliseconds, mic
 
 ## Enable Jitter
 
-Enabled Jitter allows to add an noise for the back-off time. Turn on it is very simple:
+Enabled Jitter allows to add a noise for the back-off time. Turn on it is very simple:
 
 ```php
 <?php
 
-use Orangesoft\BackOff\Generator\GeneratorBuilder;
+use Orangesoft\BackOff\Generator\Generator;
+use Orangesoft\BackOff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Strategy\ExponentialStrategy;
 use Orangesoft\BackOff\Jitter\EqualJitter;
 
-$generator = GeneratorBuilder::create()
-    ->setJitter(new EqualJitter())
-    ->build()
-;
+$generator = new Generator(
+    baseTime: new Milliseconds(1_000),
+    capTime: new Milliseconds(60_000),
+    strategy: new ExponentialStrategy(multiplier: 2),
+    jitter: new EqualJitter(),
+);
 ```
 
-You can use [EqualJitter](../src/Jitter/EqualJitter.php) or [FullJitter](../src/Jitter/FullJitter.php). By default Jitter is disabled.
+You can use [EqualJitter](../src/Jitter/EqualJitter.php) or [FullJitter](../src/Jitter/FullJitter.php).
 
-## Sleep by Duration
+## Duration sleep
 
 Pass the duration time to Sleeper as below:
 
 ```php
 <?php
 
-use Orangesoft\BackOff\Sleeper\Sleeper;
-use Orangesoft\BackOff\Generator\GeneratorBuilder;
+use Orangesoft\BackOff\Generator\Generator;
 use Orangesoft\BackOff\Duration\DurationInterface;
 use Orangesoft\BackOff\Duration\Milliseconds;
 use Orangesoft\BackOff\Strategy\ExponentialStrategy;
+use Orangesoft\BackOff\Jitter\NullJitter;
+use Orangesoft\BackOff\Sleeper\Sleeper;
+
+$generator = new Generator(
+    baseTime: new Milliseconds(1_000),
+    capTime: new Milliseconds(60_000),
+    strategy: new ExponentialStrategy(multiplier: 2),
+    jitter: new NullJitter(),
+);
 
 $sleeper = new Sleeper();
 
-$generator = GeneratorBuilder::create()
-    ->setMaxAttempts(INF)
-    ->setBaseTime(new Milliseconds(1000))
-    ->setCapTime(new Milliseconds(60 * 1000))
-    ->setStrategy(new ExponentialStrategy(2))
-    ->build()
-;
-
-$attempt = 3;
-
 /** @var DurationInterface $duration */
-$duration = $generator->generate($attempt);
+$duration = $generator->generate(attempt: 3);
 
 // usleep(8000000)
 $sleeper->sleep($duration);
 ```
 
-Configure base time and cap time with microseconds precision because Sleeper converts the duration to integer before sleep and truncates numbers after point. For example 1 nanosecond is 0.001 microseconds so it would converted to 0:
+Configure base time and cap time with microseconds precision because Sleeper converts the duration to integer before sleep and truncates numbers after point. For example 1 nanosecond is 0.001 microseconds, so it would to converted to 0:
 
 ```text
 +--------------+-------------+
@@ -106,32 +105,6 @@ Configure base time and cap time with microseconds precision because Sleeper con
 
 Use nanoseconds for high-precision calculations.
 
-## Handle max attempts
-
-Set max attempts to zero or more and catch [MaxAttemptsException](../src/Generator/Exception/MaxAttemptsException.php) to take an action when max attempts has been over:
-
-```php
-<?php
-
-use Orangesoft\BackOff\Generator\GeneratorBuilder;
-use Orangesoft\BackOff\Generator\Exception\MaxAttemptsException;
-
-$generator = GeneratorBuilder::create()
-    ->setMaxAttempts(3)
-    ->build()
-;
-
-$attempt = 10;
-
-try {
-    $generator->generate($attempt);
-} catch (MaxAttemptsException $e) {
-    // ...
-}
-```
-
-Generator is independent of the generation sequence of the duration time.
-
 ## Use BackOff
 
 BackOff accepts Generator and Sleeper dependencies:
@@ -139,55 +112,61 @@ BackOff accepts Generator and Sleeper dependencies:
 ```php
 <?php
 
-use Orangesoft\BackOff\Generator\GeneratorBuilder;
+use Orangesoft\BackOff\Generator\Generator;
+use Orangesoft\BackOff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Strategy\ExponentialStrategy;
+use Orangesoft\BackOff\Jitter\NullJitter;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 use Orangesoft\BackOff\BackOff;
 
-$generator = GeneratorBuilder::create()
-    ->setMaxAttempts(3)
-    ->build()
-;
+$generator = new Generator(
+    baseTime: new Milliseconds(1_000),
+    capTime: new Milliseconds(60_000),
+    strategy: new ExponentialStrategy(multiplier: 2),
+    jitter: new NullJitter(),
+);
 
-$sleeper = new Sleeper();
-
-$backOff = new BackOff($generator, $sleeper);
+$backOff = new BackOff(
+    maxAttempts: 3,
+    generator: $generator,
+    sleeper: new Sleeper(),
+);
 ```
 
 The main purpose of BackOff is to fall asleep for a while time or throw an exception if max attempts has been reached:
 
 ```php
-$backOff->backOff(10, new \RuntimeException());
+$backOff->backOff(4, new \RuntimeException());
 ```
 
-Use an exception that might be required to retry in your business logic.
-
-## Create BackOff facades
-
-Facades allow to quickly instance BackOff without using Generator. By default for [ExponentialBackOff](../src/Facade/ExponentialBackOff.php) max attempts is 5, base time is 1 second, cap time is 1 minute, multiplier is 2, Jitter is disabled and Sleeper is default:
+Use back-off decorators to quick instance. For example [ExponentialBackOff](../src/ExponentialBackOff.php) max attempts is 3, base time is 1 second, cap time is 1 minute, multiplier is 2, Jitter is disabled and Sleeper is default:
 
 ```php
 <?php
 
-use Orangesoft\BackOff\Facade\ExponentialBackOff;
-use Orangesoft\BackOff\Jitter\DummyJitter;
+use Orangesoft\BackOff\ExponentialBackOff;
+use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Jitter\NullJitter;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 
-$maxAttempts = 3;
-$baseTimeMs = 1000;
-$capTimeMs = 60 * 1000;
-$multiplier = 2;
-$jitter = new DummyJitter();
-$sleeper = new Sleeper();
-
-$backOff = new ExponentialBackOff($maxAttempts, $baseTimeMs, $capTimeMs, $multiplier, $jitter, $sleeper);
+$backOff = new ExponentialBackOff(
+    maxAttempts: 3,
+    baseTime: new Milliseconds(1_000),
+    capTime: new Milliseconds(60_000),
+    multiplier: 2,
+    jitter: new NullJitter(),
+    sleeper: new Sleeper(),
+);
 ```
 
-The following facades are available:
+The following back-off decorators are available:
 
-- [ConstantBackOff](../src/Facade/ConstantBackOff.php)
-- [LinearBackOff](../src/Facade/LinearBackOff.php)
-- [ExponentialBackOff](../src/Facade/ExponentialBackOff.php)
-- [DecorrelationJitterBackOff](../src/Facade/DecorrelationJitterBackOff.php)
+- [ConstantBackOff](../src/ConstantBackOff.php)
+- [LinearBackOff](../src/LinearBackOff.php)
+- [ExponentialBackOff](../src/ExponentialBackOff.php)
+- [DecorrelatedBackOff](../src/DecorrelatedBackOff.php)
+- [ImmediatelyThrowableBackOff](../src/ImmediatelyThrowableBackOff.php)
 
 ## Retry exceptions
 
@@ -196,14 +175,15 @@ Configure BackOff and ExceptionClassifier to retry your business logic when an e
 ```php
 <?php
 
-use Orangesoft\BackOff\Facade\ExponentialBackOff;
+use Orangesoft\BackOff\ExponentialBackOff;
+use Orangesoft\BackOff\Duration\Milliseconds;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
 use Orangesoft\BackOff\Retry\Retry;
 
-$maxAttempts = 3;
-$baseTimeMs = 1000;
-
-$backOff = new ExponentialBackOff($maxAttempts, $baseTimeMs);
+$backOff = new ExponentialBackOff(
+    maxAttempts: 3,
+    baseTime: new Milliseconds(1_000),
+);
 
 $exceptionClassifier = new ExceptionClassifier([
     \RuntimeException::class,
