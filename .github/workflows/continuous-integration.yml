@@ -16,13 +16,14 @@ jobs:
   unit-tests:
     name: Unit tests
 
-    runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
+        operating-systems: [ubuntu-latest, windows-latest, macos-latest]
         php-versions: [8.1]
         stability: [prefer-lowest, prefer-stable]
+
+    runs-on: ${{ matrix.operating-systems }}
 
     steps:
       - name: Checkout
