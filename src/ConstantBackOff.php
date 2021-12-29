@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Orangesoft\BackOff;
 
 use Orangesoft\BackOff\Duration\DurationInterface;
-use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Generator\Generator;
 use Orangesoft\BackOff\Jitter\JitterInterface;
 use Orangesoft\BackOff\Jitter\NullJitter;
@@ -19,8 +19,8 @@ final class ConstantBackOff implements BackOffInterface
 
     public function __construct(
         int|float $maxAttempts = 3,
-        DurationInterface $baseTime = new Milliseconds(1_000),
-        DurationInterface $capTime = new Milliseconds(60_000),
+        DurationInterface $baseTime = new Seconds(1),
+        DurationInterface $capTime = new Seconds(60),
         JitterInterface $jitter = new NullJitter(),
         SleeperInterface $sleeper = new Sleeper(),
     ) {

@@ -15,13 +15,13 @@ Configure base time, cap time, strategy and jitter. All options are required:
 
 use Orangesoft\BackOff\Generator\Generator;
 use Orangesoft\BackOff\Duration\DurationInterface;
-use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Strategy\ExponentialStrategy;
 use Orangesoft\BackOff\Jitter\NullJitter;
 
 $generator = new Generator(
-    baseTime: new Milliseconds(1_000),
-    capTime: new Milliseconds(60_000),
+    baseTime: new Seconds(1),
+    capTime: new Seconds(60),
     strategy: new ExponentialStrategy(multiplier: 2),
     jitter: new NullJitter(),
 );
@@ -48,13 +48,13 @@ Enabled Jitter allows to add a noise for the back-off time. Turn on it is very s
 
 use Orangesoft\BackOff\Generator\Generator;
 use Orangesoft\BackOff\Duration\DurationInterface;
-use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Strategy\ExponentialStrategy;
 use Orangesoft\BackOff\Jitter\EqualJitter;
 
 $generator = new Generator(
-    baseTime: new Milliseconds(1_000),
-    capTime: new Milliseconds(60_000),
+    baseTime: new Seconds(1),
+    capTime: new Seconds(60),
     strategy: new ExponentialStrategy(multiplier: 2),
     jitter: new EqualJitter(),
 );
@@ -71,14 +71,14 @@ Pass the duration time to Sleeper as below:
 
 use Orangesoft\BackOff\Generator\Generator;
 use Orangesoft\BackOff\Duration\DurationInterface;
-use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Strategy\ExponentialStrategy;
 use Orangesoft\BackOff\Jitter\NullJitter;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 
 $generator = new Generator(
-    baseTime: new Milliseconds(1_000),
-    capTime: new Milliseconds(60_000),
+    baseTime: new Seconds(1),
+    capTime: new Seconds(60),
     strategy: new ExponentialStrategy(multiplier: 2),
     jitter: new NullJitter(),
 );
@@ -88,19 +88,8 @@ $sleeper = new Sleeper();
 /** @var DurationInterface $duration */
 $duration = $generator->generate(attempt: 3);
 
-// usleep(8000000)
+// time_nanosleep(8, 0)
 $sleeper->sleep($duration);
-```
-
-Configure base time and cap time with microseconds precision because Sleeper converts the duration to integer before sleep and truncates numbers after point. For example 1 nanosecond is 0.001 microseconds, so it would to converted to 0:
-
-```text
-+--------------+-------------+
-| Nanoseconds  |           1 |
-| Microseconds |       0.001 |
-| Milliseconds |    0.000001 |
-| Seconds      | 0.000000001 |
-+--------------+-------------+
 ```
 
 Use nanoseconds for high-precision calculations.
@@ -114,15 +103,15 @@ BackOff accepts Generator and Sleeper dependencies:
 
 use Orangesoft\BackOff\Generator\Generator;
 use Orangesoft\BackOff\Duration\DurationInterface;
-use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Strategy\ExponentialStrategy;
 use Orangesoft\BackOff\Jitter\NullJitter;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 use Orangesoft\BackOff\BackOff;
 
 $generator = new Generator(
-    baseTime: new Milliseconds(1_000),
-    capTime: new Milliseconds(60_000),
+    baseTime: new Seconds(1),
+    capTime: new Seconds(60),
     strategy: new ExponentialStrategy(multiplier: 2),
     jitter: new NullJitter(),
 );
@@ -146,14 +135,14 @@ Use back-off decorators to quick instance. For example [ExponentialBackOff](../s
 <?php
 
 use Orangesoft\BackOff\ExponentialBackOff;
-use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Jitter\NullJitter;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 
 $backOff = new ExponentialBackOff(
     maxAttempts: 3,
-    baseTime: new Milliseconds(1_000),
-    capTime: new Milliseconds(60_000),
+    baseTime: new Seconds(1),
+    capTime: new Seconds(60),
     multiplier: 2,
     jitter: new NullJitter(),
     sleeper: new Sleeper(),
@@ -176,13 +165,13 @@ Configure BackOff and ExceptionClassifier to retry your business logic when an e
 <?php
 
 use Orangesoft\BackOff\ExponentialBackOff;
-use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
 use Orangesoft\BackOff\Retry\Retry;
 
 $backOff = new ExponentialBackOff(
     maxAttempts: 3,
-    baseTime: new Milliseconds(1_000),
+    baseTime: new Seconds(1),
 );
 
 $exceptionClassifier = new ExceptionClassifier([

@@ -26,14 +26,14 @@ Configure BackOff and ExceptionClassifier to retry your business logic when an e
 <?php
 
 use Orangesoft\BackOff\ExponentialBackOff;
-use Orangesoft\BackOff\Duration\Milliseconds;
+use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
 use Orangesoft\BackOff\Retry\Retry;
 
 $backOff = new ExponentialBackOff(
     maxAttempts: 3,
-    baseTime: new Milliseconds(1_000),
-    capTime: new Milliseconds(60_000),
+    baseTime: new Seconds(1),
+    capTime: new Seconds(60),
 );
 
 $exceptionClassifier = new ExceptionClassifier([

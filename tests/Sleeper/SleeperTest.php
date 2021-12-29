@@ -17,11 +17,11 @@ class SleeperTest extends TestCase
 
         $timer = new Timer();
 
-        $milliseconds = new Nanoseconds(1_000);
+        $nanoseconds = new Nanoseconds(1_000);
 
         $timer->start();
 
-        $sleeper->sleep($milliseconds);
+        $sleeper->sleep($nanoseconds);
 
         $duration = $timer->stop();
 
