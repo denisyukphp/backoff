@@ -31,10 +31,12 @@ Generator returns a duration time to sleep:
 
 ```php
 /** @var DurationInterface $duration */
-$duration = $generator->generate(attempt: 3);;
+$duration = $generator->generate(attempt: 3);
 
-// float(8000)
-$duration->asMilliseconds();
+$duration->asSeconds();      // float(8)
+$duration->asMilliseconds(); // float(8_000)
+$duration->asMicroseconds(); // float(8_000_000)
+$duration->asNanoseconds();  // float(8_000_000_000)
 ```
 
 As a result, you can work with such values of time as seconds, milliseconds, microseconds and nanoseconds.
@@ -72,12 +74,13 @@ Pass the duration time to Sleeper as below:
 use Orangesoft\BackOff\Generator\Generator;
 use Orangesoft\BackOff\Duration\DurationInterface;
 use Orangesoft\BackOff\Duration\Seconds;
+use Orangesoft\BackOff\Duration\Milliseconds;
 use Orangesoft\BackOff\Strategy\ExponentialStrategy;
 use Orangesoft\BackOff\Jitter\NullJitter;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 
 $generator = new Generator(
-    baseTime: new Seconds(1),
+    baseTime: new Milliseconds(1_200),
     capTime: new Seconds(60),
     strategy: new ExponentialStrategy(multiplier: 2),
     jitter: new NullJitter(),
@@ -88,7 +91,7 @@ $sleeper = new Sleeper();
 /** @var DurationInterface $duration */
 $duration = $generator->generate(attempt: 3);
 
-// time_nanosleep(8, 0)
+// time_nanosleep(9, 600000000)
 $sleeper->sleep($duration);
 ```
 
