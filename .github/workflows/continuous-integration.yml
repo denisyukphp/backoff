@@ -19,11 +19,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        operating-systems: [ubuntu-latest, windows-latest, macos-latest]
         php-versions: [8.1]
         stability: [prefer-lowest, prefer-stable]
 
-    runs-on: ${{ matrix.operating-systems }}
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
