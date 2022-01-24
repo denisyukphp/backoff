@@ -186,10 +186,10 @@ $exceptionClassifier = new ExceptionClassifier([
 $retry = new Retry($backOff, $exceptionClassifier);
 ```
 
-If you don't need any back-off at all use NullBackOff which just count attempts:
+If you don't need any back-off at all use [NullBackOff](../src/NullBackOff.php) which just count attempts:
 
 ```php
-$backOff = new NullBackOff(maxAttempts: 3);
+$backOff = new NullBackOff(maxAttempts: INF);
 
 $exceptionClassifier = new ExceptionClassifier([
     \RuntimeException::class,
