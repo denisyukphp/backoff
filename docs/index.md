@@ -159,6 +159,7 @@ The following back-off decorators are available:
 - [ExponentialBackOff](../src/ExponentialBackOff.php)
 - [DecorrelatedBackOff](../src/DecorrelatedBackOff.php)
 - [ImmediatelyThrowableBackOff](../src/ImmediatelyThrowableBackOff.php)
+- [NullBackOff](../src/NullBackOff.php)
 
 ## Retry exceptions
 
@@ -168,6 +169,7 @@ Configure BackOff and ExceptionClassifier to retry your business logic when an e
 <?php
 
 use Orangesoft\BackOff\ExponentialBackOff;
+use Orangesoft\BackOff\NullBackOff;
 use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
 use Orangesoft\BackOff\Retry\Retry;
@@ -176,6 +178,18 @@ $backOff = new ExponentialBackOff(
     maxAttempts: 3,
     baseTime: new Seconds(1),
 );
+
+$exceptionClassifier = new ExceptionClassifier([
+    \RuntimeException::class,
+]);
+
+$retry = new Retry($backOff, $exceptionClassifier);
+```
+
+If you don't need any back-off at all use NullBackOff which just count attempts:
+
+```php
+$backOff = new NullBackOff(maxAttempts: 3);
 
 $exceptionClassifier = new ExceptionClassifier([
     \RuntimeException::class,
