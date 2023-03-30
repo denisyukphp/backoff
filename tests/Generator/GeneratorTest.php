@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Tests\Generator;
 
-use Orangesoft\BackOff\Generator\Generator;
 use Orangesoft\BackOff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Generator\Generator;
+use Orangesoft\BackOff\Jitter\EqualJitter;
+use Orangesoft\BackOff\Jitter\NullJitter;
 use Orangesoft\BackOff\Strategy\ConstantStrategy;
 use Orangesoft\BackOff\Strategy\LinearStrategy;
-use Orangesoft\BackOff\Jitter\NullJitter;
-use Orangesoft\BackOff\Jitter\EqualJitter;
 use PHPUnit\Framework\TestCase;
 
 class GeneratorTest extends TestCase

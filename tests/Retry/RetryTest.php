@@ -18,7 +18,7 @@ class RetryTest extends TestCase
             exceptionClassifier: new ExceptionClassifier(),
         );
 
-        $result = $retry->call(fn(int $a, int $b): int => $a + $b, [5, 10]);
+        $result = $retry->call(fn (int $a, int $b): int => $a + $b, [5, 10]);
 
         $this->assertSame(15, $result);
     }
@@ -34,7 +34,7 @@ class RetryTest extends TestCase
 
         $this->expectExceptionObject($throwable);
 
-        $retry->call(fn() => throw $throwable);
+        $retry->call(fn () => throw $throwable);
     }
 
     public function testAttemptsCounter(): void
@@ -45,7 +45,7 @@ class RetryTest extends TestCase
         );
 
         try {
-            $retry->call(fn() => throw new \Exception());
+            $retry->call(fn () => throw new \Exception());
         } catch (\Exception) {
             $this->assertSame(3, $attemptsCounterBackOff->getLastAttempt());
         }

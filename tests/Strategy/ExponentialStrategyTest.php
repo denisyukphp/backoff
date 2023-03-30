@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Tests\Strategy;
 
-use Orangesoft\BackOff\Strategy\ExponentialStrategy;
 use Orangesoft\BackOff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Strategy\ExponentialStrategy;
 use PHPUnit\Framework\TestCase;
 
 class ExponentialStrategyTest extends TestCase

@@ -30,7 +30,7 @@ final class Retry implements RetryInterface
 
             $this->backOff->backOff($attempt, $throwable);
 
-            $attempt++;
+            ++$attempt;
 
             goto retrying;
         }

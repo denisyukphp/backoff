@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Tests\Strategy;
 
-use Orangesoft\BackOff\Strategy\DecorrelatedStrategy;
 use Orangesoft\BackOff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Strategy\DecorrelatedStrategy;
 use PHPUnit\Framework\TestCase;
 
 class DecorrelatedStrategyTest extends TestCase

@@ -6,8 +6,8 @@ namespace Orangesoft\BackOff\Generator;
 
 use Orangesoft\BackOff\Duration\DurationInterface;
 use Orangesoft\BackOff\Duration\Nanoseconds;
-use Orangesoft\BackOff\Strategy\StrategyInterface;
 use Orangesoft\BackOff\Jitter\JitterInterface;
+use Orangesoft\BackOff\Strategy\StrategyInterface;
 
 final class Generator implements GeneratorInterface
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Tests;
 
-use Orangesoft\BackOff\ExponentialBackOff;
 use Orangesoft\BackOff\Duration\Nanoseconds;
+use Orangesoft\BackOff\ExponentialBackOff;
 use Orangesoft\BackOff\Jitter\NullJitter;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 use PHPUnit\Framework\TestCase;
