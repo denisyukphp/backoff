@@ -1,8 +1,21 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<phpunit bootstrap="./vendor/autoload.php">
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+    bootstrap="./vendor/autoload.php"
+    cacheResultFile="./build/cache/phpunit.cache"
+>
     <testsuites>
-        <testsuite name="back-off test suite">
+        <testsuite name="backoff">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
+    <coverage
+        processUncoveredFiles="true"
+        cacheDirectory="./build/cache/phpunit-coverage/"
+    >
+        <include>
+            <directory suffix=".php">./src/</directory>
+        </include>
+    </coverage>
 </phpunit>

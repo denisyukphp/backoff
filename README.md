@@ -1,6 +1,6 @@
 # BackOff
 
-[![Build Status](https://img.shields.io/github/workflow/status/Orangesoft-Development/backoff/build/main?style=plastic)](https://github.com/Orangesoft-Development/backoff/actions/workflows/continuous-integration.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/denisyukphp/backoff/ci.yml?branch=main&style=plastic)](https://github.com/denisyukphp/backoff/actions/workflows/ci.yml)
 [![Latest Stable Version](https://img.shields.io/packagist/v/orangesoft/backoff?style=plastic)](https://packagist.org/packages/orangesoft/backoff)
 [![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/orangesoft/backoff?style=plastic&color=8892BF)](https://packagist.org/packages/orangesoft/backoff)
 [![Total Downloads](https://img.shields.io/packagist/dt/orangesoft/backoff?style=plastic)](https://packagist.org/packages/orangesoft/backoff)

@@ -1,7 +1,16 @@
 {
     "name": "orangesoft/backoff",
     "description": "Back-off algorithm implementation",
-    "keywords": ["backoff", "exponential", "linear", "constant", "decorrelation", "jitter", "sleeper", "retry"],
+    "keywords": [
+        "backoff",
+        "exponential",
+        "linear",
+        "constant",
+        "decorrelation",
+        "jitter",
+        "sleeper",
+        "retry"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -11,27 +20,47 @@
             "role": "Developer"
         }
     ],
+    "config": {
+        "sort-packages": true
+    },
     "require": {
         "php": "^8.1"
     },
     "require-dev": {
-        "phpunit/php-timer": "^5.0",
-        "phpunit/phpunit": "^9.5"
+        "friendsofphp/php-cs-fixer": "^3.10",
+        "php-parallel-lint/php-console-highlighter": "^1.0",
+        "php-parallel-lint/php-parallel-lint": "^1.3",
+        "phpbench/phpbench": "^1.2",
+        "phpunit/phpunit": "^9.5",
+        "psalm/plugin-phpunit": "^0.17.0",
+        "vimeo/psalm": "^4.26"
     },
     "autoload": {
         "psr-4": {
-            "Orangesoft\\BackOff\\": "src/"
+            "Orangesoft\\BackOff\\": "./src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Orangesoft\\BackOff\\Tests\\": "tests/"
+            "Orangesoft\\BackOff\\Tests\\": "./tests/"
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit --colors=always"
-    },
-    "config": {
-        "sort-packages": true
+        "phpunit": "./vendor/bin/phpunit --verbose --colors=always --no-coverage",
+        "phpunit-coverage": "./vendor/bin/phpunit --verbose --colors=always --coverage-text",
+        "phpunit-coverage-html": "./vendor/bin/phpunit --verbose --colors=always --coverage-html ./build/logs/phpunit-coverage/",
+        "parallel-lint": "./vendor/bin/parallel-lint --colors ./src/ ./tests/",
+        "php-cs-fixer:fix": "./vendor/bin/php-cs-fixer fix --verbose --ansi --show-progress=dots",
+        "php-cs-fixer:diff": "./vendor/bin/php-cs-fixer fix --verbose --ansi --dry-run --diff",
+        "psalm": "./vendor/bin/psalm --show-info=true",
+        "psalm:set-baseline": "@psalm --set-baseline=./psalm-baseline.xml",
+        "psalm:update-baseline": "@psalm --update-baseline",
+        "psalm:ignore-baseline": "@psalm --ignore-baseline",
+        "test": [
+            "@parallel-lint",
+            "@psalm",
+            "@php-cs-fixer:diff",
+            "@phpunit"
+        ]
     }
 }

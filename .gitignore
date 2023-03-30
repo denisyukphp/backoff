@@ -1,5 +1,5 @@
-.idea/
-vendor/
-composer.lock
-phpunit.xml
-.phpunit.result.cache
+/.idea/
+/.php-cs-fixer.php
+/composer.lock
+/phpunit.xml
+/vendor/
