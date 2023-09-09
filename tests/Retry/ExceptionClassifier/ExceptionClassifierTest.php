@@ -7,49 +7,31 @@ namespace Orangesoft\BackOff\Tests\Retry\ExceptionClassifier;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
 use PHPUnit\Framework\TestCase;
 
-class ExceptionClassifierTest extends TestCase
+final class ExceptionClassifierTest extends TestCase
 {
-    public function testDefaultExceptions(): void
+    /**
+     * @param string[] $classNames
+     *
+     * @dataProvider getClassifyData
+     */
+    public function testClassify(array $classNames, \Throwable $throwable, bool $expectedResult): void
     {
-        $exceptionClassifier = new ExceptionClassifier();
+        $exceptionClassifier = new ExceptionClassifier($classNames);
 
-        $this->assertTrue($exceptionClassifier->classify(new \Error()));
-        $this->assertTrue($exceptionClassifier->classify(new \Exception()));
+        $actualResult = $exceptionClassifier->classify($throwable);
+
+        $this->assertSame($expectedResult, $actualResult);
     }
 
-    public function testInheritedException(): void
+    public function getClassifyData(): array
     {
-        $exceptionClassifier = new ExceptionClassifier([
-            \RuntimeException::class,
-        ]);
-
-        $this->assertTrue($exceptionClassifier->classify(new \UnexpectedValueException()));
-    }
-
-    public function testSupportedException(): void
-    {
-        $exceptionClassifier = new ExceptionClassifier([
-            \RuntimeException::class,
-        ]);
-
-        $this->assertTrue($exceptionClassifier->classify(new \RuntimeException()));
-    }
-
-    public function testUnsupportedException(): void
-    {
-        $exceptionClassifier = new ExceptionClassifier([
-            \RuntimeException::class,
-        ]);
-
-        $this->assertFalse($exceptionClassifier->classify(new \InvalidArgumentException()));
-    }
-
-    public function testInvalidClassName(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        new ExceptionClassifier([
-            \stdClass::class,
-        ]);
+        return [
+            [[], new \Error(), true],
+            [[], new \Exception(), true],
+            [[], new \RuntimeException(), true],
+            [[\RuntimeException::class], new \RuntimeException(), true],
+            [[\RuntimeException::class], new \UnexpectedValueException(), true],
+            [[\RuntimeException::class], new \InvalidArgumentException(), false],
+        ];
     }
 }

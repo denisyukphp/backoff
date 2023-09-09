@@ -4,27 +4,34 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Tests\Sleeper;
 
-use Orangesoft\BackOff\Duration\Nanoseconds;
+use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 use PHPUnit\Framework\TestCase;
 use SebastianBergmann\Timer\Timer;
 
-class SleeperTest extends TestCase
+final class SleeperTest extends TestCase
 {
-    public function testSleep(): void
+    /**
+     * @dataProvider getSleepTimeData
+     */
+    public function testSleep(float $sleepTime): void
     {
         $sleeper = new Sleeper();
-
         $timer = new Timer();
 
-        $nanoseconds = new Nanoseconds(1_000);
-
         $timer->start();
-
-        $sleeper->sleep($nanoseconds);
-
+        $sleeper->sleep(new Seconds($sleepTime));
         $duration = $timer->stop();
 
-        $this->assertGreaterThanOrEqual(1_000, $duration->asNanoseconds());
+        $this->assertGreaterThanOrEqual($sleepTime, $duration->asSeconds());
+    }
+
+    public function getSleepTimeData(): array
+    {
+        return [
+            [0.5],
+            [1.0],
+            [1.5],
+        ];
     }
 }

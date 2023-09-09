@@ -4,7 +4,6 @@ on:
   push:
     paths-ignore:
       - 'build/**'
-      - 'docs/**'
       - '.editorconfig'
       - '.gitattributes'
       - 'LICENSE'
@@ -12,7 +11,6 @@ on:
   pull_request:
     paths-ignore:
       - 'build/**'
-      - 'docs/**'
       - '.editorconfig'
       - '.gitattributes'
       - 'LICENSE'
@@ -22,60 +20,48 @@ jobs:
   parallel-lint:
     name: 'ParallelLint'
     runs-on: 'ubuntu-latest'
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
           coverage: none
-
       - name: Install dependencies
         uses: ramsey/composer-install@v2
-
       - name: Run ParallelLint
         run: composer parallel-lint -- --no-progress --ignore-fails
 
   psalm:
     name: 'Psalm'
     runs-on: 'ubuntu-latest'
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
           coverage: none
-
       - name: Install dependencies
         uses: ramsey/composer-install@v2
-
       - name: Run Psalm
         run: composer psalm -- --no-progress --no-cache --output-format=github
 
   php-cs-fixer:
     name: 'PHPCsFixer'
     runs-on: 'ubuntu-latest'
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
           coverage: none
-
       - name: Install dependencies
         uses: ramsey/composer-install@v2
-
       - name: Run PHPCsFixer
         run: composer php-cs-fixer:diff -- --no-interaction --using-cache=no
 
@@ -83,7 +69,6 @@ jobs:
     name: 'PHPUnit'
     needs: ['parallel-lint', 'psalm', 'php-cs-fixer']
     runs-on: ${{ matrix.operating-system }}
-
     strategy:
       fail-fast: false
       matrix:
@@ -92,24 +77,21 @@ jobs:
           - 'windows-latest'
         php-version:
           - '8.1'
+          - '8.2'
         composer-dependency:
           - 'lowest'
           - 'highest'
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           coverage: none
-
       - name: Install dependencies
         uses: ramsey/composer-install@v2
         with:
           dependency-versions: ${{ matrix.composer-dependency }}
-
       - name: Run PHPUnit
         run: composer phpunit -- --no-interaction --do-not-cache-result

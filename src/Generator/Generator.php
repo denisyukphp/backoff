@@ -4,38 +4,29 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Generator;
 
-use Orangesoft\BackOff\Duration\DurationInterface;
-use Orangesoft\BackOff\Duration\Nanoseconds;
+use Assert\Assertion;
 use Orangesoft\BackOff\Jitter\JitterInterface;
 use Orangesoft\BackOff\Strategy\StrategyInterface;
 
 final class Generator implements GeneratorInterface
 {
     public function __construct(
-        private DurationInterface $baseTime,
-        private DurationInterface $capTime,
         private StrategyInterface $strategy,
         private JitterInterface $jitter,
     ) {
     }
 
-    public function generate(int $attempt): DurationInterface
+    public function generate(int $attempt, float $baseTime, float $capTime): float
     {
-        $sleepTime = $this->strategy->calculate($this->baseTime, $attempt);
+        // @codeCoverageIgnoreStart
+        Assertion::greaterOrEqualThan($attempt, 0);
+        Assertion::greaterOrEqualThan($baseTime, 0);
+        Assertion::greaterOrEqualThan($capTime, 0);
+        // @codeCoverageIgnoreEnd
 
-        $duration = $this->min($this->capTime, $sleepTime);
+        $backOffTime = $this->strategy->calculate($attempt, $baseTime);
+        $jitterTime = $this->jitter->jitter($backOffTime);
 
-        return $this->jitter->jitter($duration);
-    }
-
-    private function min(DurationInterface ...$durations): DurationInterface
-    {
-        $values = array_map(function (DurationInterface $duration): float {
-            return $duration->asNanoseconds();
-        }, $durations);
-
-        $nanoseconds = min($values);
-
-        return new Nanoseconds($nanoseconds);
+        return min($jitterTime, $capTime);
     }
 }

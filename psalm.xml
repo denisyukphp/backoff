@@ -14,6 +14,13 @@
             <directory name="./vendor/"/>
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <MixedInferredReturnType>
+            <errorLevel type="suppress">
+                <directory name="./tests/"/>
+            </errorLevel>
+        </MixedInferredReturnType>
+    </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
     </plugins>

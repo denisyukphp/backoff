@@ -4,26 +4,25 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff;
 
+use Assert\Assertion;
+use Orangesoft\BackOff\Duration\Duration;
+use Orangesoft\BackOff\Duration\Nanoseconds;
 use Orangesoft\BackOff\Generator\GeneratorInterface;
 use Orangesoft\BackOff\Sleeper\SleeperInterface;
 
-final class BackOff implements BackOffInterface
+abstract class BackOff implements BackOffInterface
 {
     public function __construct(
-        private int|float $maxAttempts,
         private GeneratorInterface $generator,
         private SleeperInterface $sleeper,
     ) {
     }
 
-    public function backOff(int $attempt, \Throwable $throwable): void
+    public function backOff(int $attempt, Duration $baseTime, Duration $capTime): void
     {
-        if ($attempt > $this->maxAttempts) {
-            throw $throwable;
-        }
+        Assertion::greaterThan($attempt, 0); // @codeCoverageIgnore
 
-        $duration = $this->generator->generate($attempt);
-
-        $this->sleeper->sleep($duration);
+        $sleepTime = $this->generator->generate($attempt, $baseTime->asNanoseconds(), $capTime->asNanoseconds());
+        $this->sleeper->sleep(new Nanoseconds($sleepTime));
     }
 }

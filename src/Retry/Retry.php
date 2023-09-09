@@ -4,33 +4,33 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Retry;
 
-use Orangesoft\BackOff\BackOffInterface;
+use Assert\Assertion;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifierInterface;
 
 final class Retry implements RetryInterface
 {
     public function __construct(
-        private BackOffInterface $backOff,
+        private int $maxAttempts,
         private ExceptionClassifierInterface $exceptionClassifier,
     ) {
     }
 
-    public function call(callable $callback, array $args = []): mixed
+    public function call(callable $callback): mixed
     {
-        $attempt = 1;
+        Assertion::greaterThan($this->maxAttempts, 0); // @codeCoverageIgnore
+
+        $attempt = 0;
 
         retrying:
 
         try {
-            return $callback(...$args);
+            return $callback();
         } catch (\Throwable $throwable) {
-            if (!$this->exceptionClassifier->classify($throwable)) {
+            ++$attempt;
+
+            if ($attempt >= $this->maxAttempts || !$this->exceptionClassifier->classify($throwable)) {
                 throw $throwable;
             }
-
-            $this->backOff->backOff($attempt, $throwable);
-
-            ++$attempt;
 
             goto retrying;
         }

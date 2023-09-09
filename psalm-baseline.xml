@@ -1,50 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
-  <file src="src/Generator/Generator.php">
-    <ArgumentTypeCoercion occurrences="1">
-      <code>$values</code>
-    </ArgumentTypeCoercion>
-  </file>
-  <file src="src/Jitter/EqualJitter.php">
-    <PossiblyInvalidArgument occurrences="1">
-      <code>$nanoseconds / 2</code>
-    </PossiblyInvalidArgument>
+  <file src="src/Retry/BackOffRetry.php">
+    <InvalidReturnType occurrences="1">
+      <code>mixed</code>
+    </InvalidReturnType>
   </file>
   <file src="src/Retry/Retry.php">
     <InvalidReturnType occurrences="1">
       <code>mixed</code>
     </InvalidReturnType>
-    <UnusedVariable occurrences="1">
-      <code>$attempt</code>
-    </UnusedVariable>
-  </file>
-  <file src="src/Sleeper/Sleeper.php">
-    <ArgumentTypeCoercion occurrences="2">
-      <code>$nanoseconds</code>
-      <code>$seconds</code>
-    </ArgumentTypeCoercion>
-    <UnusedFunctionCall occurrences="1">
-      <code>time_nanosleep</code>
-    </UnusedFunctionCall>
-  </file>
-  <file src="tests/Strategy/ConstantStrategyTest.php">
-    <MixedInferredReturnType occurrences="1">
-      <code>array</code>
-    </MixedInferredReturnType>
-  </file>
-  <file src="tests/Strategy/DecorrelatedStrategyTest.php">
-    <MixedInferredReturnType occurrences="1">
-      <code>array</code>
-    </MixedInferredReturnType>
-  </file>
-  <file src="tests/Strategy/ExponentialStrategyTest.php">
-    <MixedInferredReturnType occurrences="1">
-      <code>array</code>
-    </MixedInferredReturnType>
-  </file>
-  <file src="tests/Strategy/LinearStrategyTest.php">
-    <MixedInferredReturnType occurrences="1">
-      <code>array</code>
-    </MixedInferredReturnType>
   </file>
 </files>

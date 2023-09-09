@@ -6,5 +6,5 @@ namespace Orangesoft\BackOff\Retry;
 
 interface RetryInterface
 {
-    public function call(callable $callback, array $args = []): mixed;
+    public function call(callable $callback): mixed;
 }

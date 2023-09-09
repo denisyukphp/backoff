@@ -4,15 +4,26 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Sleeper;
 
-use Orangesoft\BackOff\Duration\DurationInterface;
+use Assert\Assertion;
+use Orangesoft\BackOff\Duration\Duration;
 
 final class Sleeper implements SleeperInterface
 {
-    public function sleep(DurationInterface $duration): void
+    public function sleep(Duration $sleepTime): void
     {
-        $seconds = (int) $duration->asSeconds();
-        $nanoseconds = (int) $duration->asNanoseconds() - $seconds * 1_000_000_000;
+        $time = $sleepTime->asMicroseconds();
 
-        time_nanosleep($seconds, $nanoseconds);
+        Assertion::greaterOrEqualThan($time, 0); // @codeCoverageIgnore
+
+        $seconds = (int) ($time / 1_000_000);
+        $microseconds = $time % 1_000_000;
+
+        if (0 < $seconds) {
+            sleep($seconds);
+        }
+
+        if (0 < $microseconds) {
+            usleep($microseconds);
+        }
     }
 }
