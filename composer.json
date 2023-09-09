@@ -3,13 +3,10 @@
     "description": "Back-off algorithm implementation.",
     "keywords": [
         "backoff",
-        "exponential",
-        "linear",
-        "constant",
-        "decorrelation",
+        "duration",
         "jitter",
-        "sleeper",
-        "retry"
+        "retry",
+        "sleeper"
     ],
     "license": "MIT",
     "authors": [
