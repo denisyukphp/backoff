@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         uses: ramsey/composer-install@v2
       - name: Run Psalm
-        run: composer psalm -- --no-progress --no-cache --output-format=github
+        run: composer psalm -- --show-info=false --no-progress --no-cache --output-format=github
 
   php-cs-fixer:
     name: 'PHPCsFixer'
