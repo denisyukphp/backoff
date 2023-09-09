@@ -9,6 +9,9 @@ use Orangesoft\BackOff\Sleeper\Sleeper;
 use PHPUnit\Framework\TestCase;
 use SebastianBergmann\Timer\Timer;
 
+/**
+ * @requires OS Linux
+ */
 final class SleeperTest extends TestCase
 {
     /**
