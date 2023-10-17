@@ -113,4 +113,4 @@ The following jitters are available:
 - [Orangesoft\BackOff\Jitter\FullJitter](./src/Jitter/FullJitter.php)
 - [Orangesoft\BackOff\Jitter\ScatteredJitter](./src/Jitter/ScatteredJitter.php)
 
-Read more about back-off and jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).
+Read more about Back-Off and Jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).
