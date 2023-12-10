@@ -74,37 +74,37 @@ Pass the implementation of `Orangesoft\BackOff\Jitter\JitterInterface::class` to
 ```php
 <?php
 
-use Orangesoft\BackOff\LinearBackOff;
+use Orangesoft\BackOff\ExponentialBackOff;
 use Orangesoft\BackOff\Duration\Microseconds;
 use Orangesoft\BackOff\Jitter\EqualJitter;
 
 $equalJitter = new EqualJitter();
-$exponentialBackOff = new LinearBackOff($equalJitter);
+$exponentialBackOff = new ExponentialBackOff(multiplier: 2.0, jitter: $equalJitter);
 
 $exponentialBackOff->backOff(
     attempt: 1,
     baseTime: new Microseconds(1_000),
-    capTime: new Microseconds(10_000),
+    capTime: new Microseconds(512_000),
 );
 ```
 
-Below you can see the time intervals in microseconds for linear back-off and equal jitter, where the base time is 1000 μs and the cap time is 10000 μs:
+Below you can see the time intervals in microseconds for exponential back-off with a multiplier of 2.0 and equal jitter, where the base time is 1000 μs and the cap time is 512000 μs:
 
 ```text
-+---------+----------------------+-------------------+
-| attempt | linear back-off (μs) | equal jitter (μs) |
-+---------+----------------------+-------------------+
-|       1 |                1_000 |        [0, 1_000] |
-|       2 |                2_000 |    [1_000, 2_000] |
-|       3 |                3_000 |    [2_000, 3_000] |
-|       4 |                4_000 |    [3_000, 4_000] |
-|       5 |                5_000 |    [4_000, 5_000] |
-|       6 |                6_000 |    [5_000, 6_000] |
-|       7 |                7_000 |    [6_000, 7_000] |
-|       8 |                8_000 |    [7_000, 8_000] |
-|       9 |                9_000 |    [8_000, 9_000] |
-|      10 |               10_000 |   [9_000, 10_000] |
-+---------+----------------------+-------------------+
++---------+---------------------------+--------------------+
+| attempt | exponential back-off (μs) | equal jitter (μs)  |
++---------+---------------------------+--------------------+
+|       1 |                     1_000 |         [0, 1_000] |
+|       2 |                     2_000 |     [1_000, 2_000] |
+|       3 |                     4_000 |     [2_000, 4_000] |
+|       4 |                     8_000 |     [4_000, 8_000] |
+|       5 |                    16_000 |    [8_000, 16_000] |
+|       6 |                    32_000 |   [16_000, 32_000] |
+|       7 |                    64_000 |   [32_000, 64_000] |
+|       8 |                   128_000 |  [64_000, 128_000] |
+|       9 |                   256_000 | [128_000, 256_000] |
+|      10 |                   512_000 | [256_000, 512_000] |
++---------+---------------------------+--------------------+
 ```
 
 The following jitters are available:
