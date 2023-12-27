@@ -43,7 +43,7 @@ $backOffRetry = new BackOffRetry(
 );
 ```
 
-Use the `Orangesoft\BackOff\Retry\BackOffRetry::call(callable $callback): mixed` method to wrap the business logic and call it with retry functionality:
+Use the `Orangesoft\BackOff\Retry\BackOffRetry::call(callable $callback): mixed` method to wrap the business logic and call it with [retry functionality](https://encore.dev/blog/retries):
 
 ```php
 /** @var int $result */
