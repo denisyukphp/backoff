@@ -20,7 +20,7 @@ This package requires PHP 8.1 or later.
 
 ## Quick usage
 
-Configure `Orangesoft\BackOff\Retry\Retry::class`, any of back-off classes, and `Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier::class` to retry a business logic when an exception is thrown:
+Configure `Orangesoft\BackOff\Retry\BackOffRetry::class`, any of back-off classes, and `Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier::class` to retry a business logic when an exception is thrown:
 
 ```php
 <?php
