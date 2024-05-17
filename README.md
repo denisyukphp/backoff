@@ -34,7 +34,9 @@ $backOffRetry = new BackOffRetry(
     maxAttempts: 3,
     baseTime: new Microseconds(1_000),
     capTime: new Microseconds(10_000),
-    backOff: new ExponentialBackOff(multiplier: 2.0),
+    backOff: new ExponentialBackOff(
+        multiplier: 2.0,
+    ),
     exceptionClassifier: new ExceptionClassifier(
         classNames: [
             \Exception::class,
@@ -43,7 +45,7 @@ $backOffRetry = new BackOffRetry(
 );
 ```
 
-Use the `Orangesoft\BackOff\Retry\BackOffRetry::call(callable $callback): mixed` method to wrap the business logic and call it with [retry functionality](https://encore.dev/blog/retries):
+Use the `Orangesoft\BackOff\Retry\BackOffRetry::call(callable $callback): mixed` method to wrap the business logic and call it with retry functionality:
 
 ```php
 /** @var int $result */
@@ -67,7 +69,7 @@ The following back-off strategies are available:
 - [Orangesoft\BackOff\LinearBackOff](./src/LinearBackOff.php)
 - [Orangesoft\BackOff\PermanentBackOff](./src/PermanentBackOff.php)
 
-## Enable jitter
+## Enable Jitter
 
 Pass the implementation of `Orangesoft\BackOff\Jitter\JitterInterface::class` to the back-off class and jitter will be enabled:
 
@@ -78,8 +80,10 @@ use Orangesoft\BackOff\ExponentialBackOff;
 use Orangesoft\BackOff\Duration\Microseconds;
 use Orangesoft\BackOff\Jitter\EqualJitter;
 
-$equalJitter = new EqualJitter();
-$exponentialBackOff = new ExponentialBackOff(multiplier: 2.0, jitter: $equalJitter);
+$exponentialBackOff = new ExponentialBackOff(
+    multiplier: 2.0,
+    jitter: new EqualJitter(),
+);
 
 $exponentialBackOff->backOff(
     attempt: 1,
