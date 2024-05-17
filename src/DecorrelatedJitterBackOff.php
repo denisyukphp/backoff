@@ -12,7 +12,7 @@ use Orangesoft\BackOff\Strategy\DecorrelatedJitterStrategy;
 
 final class DecorrelatedJitterBackOff extends BackOff
 {
-    public function __construct(float $multiplier, SleeperInterface $sleeper = null)
+    public function __construct(float $multiplier, ?SleeperInterface $sleeper = null)
     {
         $strategy = new DecorrelatedJitterStrategy($multiplier);
         $jitter = new NullJitter();

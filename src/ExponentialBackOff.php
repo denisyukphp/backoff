@@ -13,7 +13,7 @@ use Orangesoft\BackOff\Strategy\ExponentialStrategy;
 
 final class ExponentialBackOff extends BackOff
 {
-    public function __construct(float $multiplier, JitterInterface $jitter = null, SleeperInterface $sleeper = null)
+    public function __construct(float $multiplier, ?JitterInterface $jitter = null, ?SleeperInterface $sleeper = null)
     {
         $strategy = new ExponentialStrategy($multiplier);
         $jitter ??= new NullJitter();

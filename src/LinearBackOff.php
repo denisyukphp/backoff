@@ -13,7 +13,7 @@ use Orangesoft\BackOff\Strategy\LinearStrategy;
 
 final class LinearBackOff extends BackOff
 {
-    public function __construct(JitterInterface $jitter = null, SleeperInterface $sleeper = null)
+    public function __construct(?JitterInterface $jitter = null, ?SleeperInterface $sleeper = null)
     {
         $strategy = new LinearStrategy();
         $jitter ??= new NullJitter();

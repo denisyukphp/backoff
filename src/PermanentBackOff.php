@@ -13,7 +13,7 @@ use Orangesoft\BackOff\Strategy\PermanentStrategy;
 
 final class PermanentBackOff extends BackOff
 {
-    public function __construct(JitterInterface $jitter = null, SleeperInterface $sleeper = null)
+    public function __construct(?JitterInterface $jitter = null, ?SleeperInterface $sleeper = null)
     {
         $strategy = new PermanentStrategy();
         $jitter ??= new NullJitter();

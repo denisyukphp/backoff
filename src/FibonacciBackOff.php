@@ -13,7 +13,7 @@ use Orangesoft\BackOff\Strategy\FibonacciStrategy;
 
 final class FibonacciBackOff extends BackOff
 {
-    public function __construct(JitterInterface $jitter = null, SleeperInterface $sleeper = null)
+    public function __construct(?JitterInterface $jitter = null, ?SleeperInterface $sleeper = null)
     {
         $strategy = new FibonacciStrategy();
         $jitter ??= new NullJitter();
