@@ -1,15 +1,12 @@
 {
     "name": "orangesoft/backoff",
-    "description": "Back-off algorithm implementation",
+    "description": "Back-off algorithm implementation.",
     "keywords": [
         "backoff",
-        "exponential",
-        "linear",
-        "constant",
-        "decorrelation",
+        "duration",
         "jitter",
-        "sleeper",
-        "retry"
+        "retry",
+        "sleeper"
     ],
     "license": "MIT",
     "authors": [
@@ -24,7 +21,8 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^8.1"
+        "php": "^8.1",
+        "beberlei/assert": "^3.3"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.10",
@@ -38,7 +36,10 @@
     "autoload": {
         "psr-4": {
             "Orangesoft\\BackOff\\": "./src/"
-        }
+        },
+        "files": [
+            "./helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -47,15 +48,18 @@
     },
     "scripts": {
         "phpunit": "./vendor/bin/phpunit --verbose --colors=always --no-coverage",
+        "phpunit:clear-cache": "rm ./build/cache/phpunit.cache",
         "phpunit-coverage": "./vendor/bin/phpunit --verbose --colors=always --coverage-text",
         "phpunit-coverage-html": "./vendor/bin/phpunit --verbose --colors=always --coverage-html ./build/logs/phpunit-coverage/",
         "parallel-lint": "./vendor/bin/parallel-lint --colors ./src/ ./tests/",
         "php-cs-fixer:fix": "./vendor/bin/php-cs-fixer fix --verbose --ansi --show-progress=dots",
         "php-cs-fixer:diff": "./vendor/bin/php-cs-fixer fix --verbose --ansi --dry-run --diff",
+        "php-cs-fixer:clear-cache": "rm ./build/cache/php-cs-fixer.cache",
         "psalm": "./vendor/bin/psalm --show-info=true",
-        "psalm:set-baseline": "@psalm --set-baseline=./psalm-baseline.xml",
-        "psalm:update-baseline": "@psalm --update-baseline",
-        "psalm:ignore-baseline": "@psalm --ignore-baseline",
+        "psalm:clear-cache": "rm -rf ./build/cache/psalm/",
+        "psalm:set-baseline": "@psalm --set-baseline=./psalm-baseline.xml --no-cache",
+        "psalm:update-baseline": "@psalm --update-baseline --no-cache",
+        "psalm:ignore-baseline": "@psalm --ignore-baseline --no-cache",
         "test": [
             "@parallel-lint",
             "@psalm",

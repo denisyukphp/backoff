@@ -4,50 +4,43 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Tests\Retry;
 
-use Orangesoft\BackOff\ImmediatelyThrowableBackOff;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
 use Orangesoft\BackOff\Retry\Retry;
+use Orangesoft\BackOff\Tests\CallbackSpy;
 use PHPUnit\Framework\TestCase;
 
-class RetryTest extends TestCase
+final class RetryTest extends TestCase
 {
-    public function testReturnValue(): void
+    public function testSuccessfulCall(): void
     {
         $retry = new Retry(
-            backOff: new ImmediatelyThrowableBackOff(),
+            maxAttempts: 3,
             exceptionClassifier: new ExceptionClassifier(),
         );
 
-        $result = $retry->call(fn (int $a, int $b): int => $a + $b, [5, 10]);
+        /** @var float $result */
+        $result = $retry->call(static fn (): float => 1.618);
 
-        $this->assertSame(15, $result);
+        $this->assertEquals(1.618, $result);
     }
 
-    public function testThrowException(): void
+    public function testFailureRetryableCall(): void
     {
         $retry = new Retry(
-            backOff: new ImmediatelyThrowableBackOff(),
-            exceptionClassifier: new ExceptionClassifier(),
-        );
-
-        $throwable = new \Exception();
-
-        $this->expectExceptionObject($throwable);
-
-        $retry->call(fn () => throw $throwable);
-    }
-
-    public function testAttemptsCounter(): void
-    {
-        $retry = new Retry(
-            backOff: $attemptsCounterBackOff = new AttemptsCounterBackOff(maxAttempts: 3),
-            exceptionClassifier: new ExceptionClassifier(),
+            maxAttempts: 3,
+            exceptionClassifier: new ExceptionClassifier(
+                classNames: [
+                    \RuntimeException::class,
+                ],
+            ),
         );
 
         try {
-            $retry->call(fn () => throw new \Exception());
-        } catch (\Exception) {
-            $this->assertSame(3, $attemptsCounterBackOff->getLastAttempt());
+            $retry->call(new CallbackSpy(function (int $counter): never {
+                throw new \RuntimeException(sprintf('Exception thrown %d times.', $counter));
+            }));
+        } catch (\RuntimeException $e) {
+            $this->assertSame('Exception thrown 2 times.', $e->getMessage());
         }
     }
 }

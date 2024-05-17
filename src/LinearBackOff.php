@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff;
 
-use Orangesoft\BackOff\Duration\DurationInterface;
-use Orangesoft\BackOff\Duration\Seconds;
 use Orangesoft\BackOff\Generator\Generator;
 use Orangesoft\BackOff\Jitter\JitterInterface;
 use Orangesoft\BackOff\Jitter\NullJitter;
@@ -13,29 +11,15 @@ use Orangesoft\BackOff\Sleeper\Sleeper;
 use Orangesoft\BackOff\Sleeper\SleeperInterface;
 use Orangesoft\BackOff\Strategy\LinearStrategy;
 
-final class LinearBackOff implements BackOffInterface
+final class LinearBackOff extends BackOff
 {
-    private BackOffInterface $backOff;
-
-    public function __construct(
-        int|float $maxAttempts = 3,
-        DurationInterface $baseTime = new Seconds(1),
-        DurationInterface $capTime = new Seconds(60),
-        JitterInterface $jitter = new NullJitter(),
-        SleeperInterface $sleeper = new Sleeper(),
-    ) {
-        $generator = new Generator(
-            baseTime: $baseTime,
-            capTime: $capTime,
-            strategy: new LinearStrategy(),
-            jitter: $jitter,
-        );
-
-        $this->backOff = new BackOff($maxAttempts, $generator, $sleeper);
-    }
-
-    public function backOff(int $attempt, \Throwable $throwable): void
+    public function __construct(?JitterInterface $jitter = null, ?SleeperInterface $sleeper = null)
     {
-        $this->backOff->backOff($attempt, $throwable);
+        $strategy = new LinearStrategy();
+        $jitter ??= new NullJitter();
+        $generator = new Generator($strategy, $jitter);
+        $sleeper ??= new Sleeper();
+
+        parent::__construct($generator, $sleeper);
     }
 }

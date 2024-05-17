@@ -20,33 +20,36 @@ This package requires PHP 8.1 or later.
 
 ## Quick usage
 
-Configure BackOff and ExceptionClassifier to retry your business logic when an exception will be thrown:
+Configure `Orangesoft\BackOff\Retry\BackOffRetry::class`, any of back-off classes, and `Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier::class` to retry a business logic when an exception is thrown:
 
 ```php
 <?php
 
 use Orangesoft\BackOff\ExponentialBackOff;
-use Orangesoft\BackOff\Duration\Seconds;
+use Orangesoft\BackOff\Duration\Microseconds;
 use Orangesoft\BackOff\Retry\ExceptionClassifier\ExceptionClassifier;
-use Orangesoft\BackOff\Retry\Retry;
+use Orangesoft\BackOff\Retry\BackOffRetry;
 
-$backOff = new ExponentialBackOff(
+$backOffRetry = new BackOffRetry(
     maxAttempts: 3,
-    baseTime: new Seconds(1),
-    capTime: new Seconds(60),
+    baseTime: new Microseconds(1_000),
+    capTime: new Microseconds(10_000),
+    backOff: new ExponentialBackOff(
+        multiplier: 2.0,
+    ),
+    exceptionClassifier: new ExceptionClassifier(
+        classNames: [
+            \Exception::class,
+        ],
+    ),
 );
-
-$exceptionClassifier = new ExceptionClassifier([
-    \RuntimeException::class,
-]);
-
-$retry = new Retry($backOff, $exceptionClassifier);
 ```
 
-Put the business logic in a callback function and call it:
+Use the `Orangesoft\BackOff\Retry\BackOffRetry::call(callable $callback): mixed` method to wrap the business logic and call it with retry functionality:
 
 ```php
-$retry->call(function (): int {
+/** @var int $result */
+$result = $backOffRetry->call(static function (): int {
     $random = mt_rand(5, 10);
     
     if (0 === $random % 2) {
@@ -57,14 +60,61 @@ $retry->call(function (): int {
 });
 ```
 
-After the exception is thrown call will be retried with a back-off time until max attempts has been reached.
+The following back-off strategies are available:
 
-## Documentation
+- [Orangesoft\BackOff\CallbackBackOff](./src/CallbackBackOff.php)
+- [Orangesoft\BackOff\DecorrelatedJitterBackOff](./src/DecorrelatedJitterBackOff.php)
+- [Orangesoft\BackOff\ExponentialBackOff](./src/ExponentialBackOff.php)
+- [Orangesoft\BackOff\FibonacciBackOff](./src/FibonacciBackOff.php)
+- [Orangesoft\BackOff\LinearBackOff](./src/LinearBackOff.php)
+- [Orangesoft\BackOff\PermanentBackOff](./src/PermanentBackOff.php)
 
-- [Configure Generator](docs/index.md#configure-generator)
-- [Enable Jitter](docs/index.md#enable-jitter)
-- [Duration sleep](docs/index.md#duration-sleep)
-- [Use BackOff](docs/index.md#use-backoff)
-- [Retry exceptions](docs/index.md#retry-exceptions)
+## Enable Jitter
 
-Read more about Back-off and Jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).
+Pass the implementation of `Orangesoft\BackOff\Jitter\JitterInterface::class` to the back-off class and jitter will be enabled:
+
+```php
+<?php
+
+use Orangesoft\BackOff\ExponentialBackOff;
+use Orangesoft\BackOff\Duration\Microseconds;
+use Orangesoft\BackOff\Jitter\EqualJitter;
+
+$exponentialBackOff = new ExponentialBackOff(
+    multiplier: 2.0,
+    jitter: new EqualJitter(),
+);
+
+$exponentialBackOff->backOff(
+    attempt: 1,
+    baseTime: new Microseconds(1_000),
+    capTime: new Microseconds(512_000),
+);
+```
+
+Below you can see the time intervals in microseconds for exponential back-off with a multiplier of 2.0 and equal jitter, where the base time is 1000 μs and the cap time is 512000 μs:
+
+```text
++---------+---------------------------+--------------------+
+| attempt | exponential back-off (μs) | equal jitter (μs)  |
++---------+---------------------------+--------------------+
+|       1 |                     1_000 |         [0, 1_000] |
+|       2 |                     2_000 |     [1_000, 2_000] |
+|       3 |                     4_000 |     [2_000, 4_000] |
+|       4 |                     8_000 |     [4_000, 8_000] |
+|       5 |                    16_000 |    [8_000, 16_000] |
+|       6 |                    32_000 |   [16_000, 32_000] |
+|       7 |                    64_000 |   [32_000, 64_000] |
+|       8 |                   128_000 |  [64_000, 128_000] |
+|       9 |                   256_000 | [128_000, 256_000] |
+|      10 |                   512_000 | [256_000, 512_000] |
++---------+---------------------------+--------------------+
+```
+
+The following jitters are available:
+
+- [Orangesoft\BackOff\Jitter\EqualJitter](./src/Jitter/EqualJitter.php)
+- [Orangesoft\BackOff\Jitter\FullJitter](./src/Jitter/FullJitter.php)
+- [Orangesoft\BackOff\Jitter\ScatteredJitter](./src/Jitter/ScatteredJitter.php)
+
+Read more about Back-Off and Jitter on [AWS Architecture Blog](https://aws.amazon.com/ru/blogs/architecture/exponential-backoff-and-jitter/).

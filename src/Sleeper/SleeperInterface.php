@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Sleeper;
 
-use Orangesoft\BackOff\Duration\DurationInterface;
+use Orangesoft\BackOff\Duration\Duration;
 
 interface SleeperInterface
 {
-    public function sleep(DurationInterface $duration): void;
+    public function sleep(Duration $sleepTime): void;
 }

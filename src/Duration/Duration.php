@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Duration;
 
-abstract class AbstractDuration implements DurationInterface
+abstract class Duration
 {
     protected function __construct(
-        private int|float $nanoseconds,
+        private float $nanoseconds,
     ) {
     }
 
     public function asNanoseconds(): float
     {
-        return (float) $this->nanoseconds;
+        return $this->nanoseconds;
     }
 
     public function asMicroseconds(): float
