@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Tests;
 
-use Orangesoft\BackOff\Duration\Duration;
 use Orangesoft\BackOff\Duration\Microseconds;
 use Orangesoft\BackOff\FibonacciBackOff;
 use Orangesoft\BackOff\Jitter\EqualJitter;
@@ -15,27 +14,22 @@ use PHPUnit\Framework\TestCase;
 
 final class FibonacciBackOffTest extends TestCase
 {
-    private Duration $baseTime;
-    private Duration $capTime;
-    private SleeperSpy $sleeperSpy;
-
-    protected function setUp(): void
-    {
-        $this->baseTime = new Microseconds(1_000);
-        $this->capTime = new Microseconds(21_000);
-        $this->sleeperSpy = new SleeperSpy();
-    }
-
     /**
      * @dataProvider getFibonacciData
      */
     public function testFibonacciBackOff(int $attempt, int $expectedSleepTime): void
     {
-        $fibonacciBackOff = new FibonacciBackOff(new NullJitter(), $this->sleeperSpy);
+        $sleeperSpy = new SleeperSpy();
+        $backOff = new FibonacciBackOff(
+            baseTime: new Microseconds(1_000),
+            capTime: new Microseconds(21_000),
+            jitter: new NullJitter(),
+            sleeper: $sleeperSpy,
+        );
 
-        $fibonacciBackOff->backOff($attempt, $this->baseTime, $this->capTime);
+        $backOff->backOff($attempt);
 
-        $this->assertEquals($expectedSleepTime, (int) $this->sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertEquals($expectedSleepTime, (int) $sleeperSpy->getSleepTime()?->asMicroseconds());
     }
 
     public function getFibonacciData(): array
@@ -60,12 +54,18 @@ final class FibonacciBackOffTest extends TestCase
      */
     public function testFibonacciBackOffWithEqualJitter(int $attempt, array $expectedSleepTime): void
     {
-        $fibonacciBackOff = new FibonacciBackOff(new EqualJitter(), $this->sleeperSpy);
+        $sleeperSpy = new SleeperSpy();
+        $backOff = new FibonacciBackOff(
+            baseTime: new Microseconds(1_000),
+            capTime: new Microseconds(21_000),
+            jitter: new EqualJitter(),
+            sleeper: $sleeperSpy,
+        );
 
-        $fibonacciBackOff->backOff($attempt, $this->baseTime, $this->capTime);
+        $backOff->backOff($attempt);
 
-        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
-        $this->assertLessThanOrEqual($expectedSleepTime[1], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertLessThanOrEqual($expectedSleepTime[1], $sleeperSpy->getSleepTime()?->asMicroseconds());
     }
 
     public function getFibonacciDataWithEqualJitter(): array
@@ -90,12 +90,18 @@ final class FibonacciBackOffTest extends TestCase
      */
     public function testFibonacciBackOffWithFullJitter(int $attempt, array $expectedSleepTime): void
     {
-        $fibonacciBackOff = new FibonacciBackOff(new FullJitter(), $this->sleeperSpy);
+        $sleeperSpy = new SleeperSpy();
+        $backOff = new FibonacciBackOff(
+            baseTime: new Microseconds(1_000),
+            capTime: new Microseconds(21_000),
+            jitter: new FullJitter(),
+            sleeper: $sleeperSpy,
+        );
 
-        $fibonacciBackOff->backOff($attempt, $this->baseTime, $this->capTime);
+        $backOff->backOff($attempt);
 
-        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
-        $this->assertLessThanOrEqual($expectedSleepTime[1], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertLessThanOrEqual($expectedSleepTime[1], $sleeperSpy->getSleepTime()?->asMicroseconds());
     }
 
     public function getFibonacciDataWithFullJitter(): array
@@ -120,12 +126,18 @@ final class FibonacciBackOffTest extends TestCase
      */
     public function testFibonacciBackOffWithScatteredJitter(int $attempt, float $range, array $expectedSleepTime): void
     {
-        $fibonacciBackOff = new FibonacciBackOff(new ScatteredJitter($range), $this->sleeperSpy);
+        $sleeperSpy = new SleeperSpy();
+        $backOff = new FibonacciBackOff(
+            baseTime: new Microseconds(1_000),
+            capTime: new Microseconds(21_000),
+            jitter: new ScatteredJitter($range),
+            sleeper: $sleeperSpy,
+        );
 
-        $fibonacciBackOff->backOff($attempt, $this->baseTime, $this->capTime);
+        $backOff->backOff($attempt);
 
-        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
-        $this->assertLessThanOrEqual($expectedSleepTime[1], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertLessThanOrEqual($expectedSleepTime[1], $sleeperSpy->getSleepTime()?->asMicroseconds());
     }
 
     public function getFibonacciDataWithScatteredJitter(): array

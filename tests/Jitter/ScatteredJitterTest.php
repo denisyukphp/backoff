@@ -16,9 +16,9 @@ final class ScatteredJitterTest extends TestCase
      */
     public function testFullJitter(float $range, int $time, array $expectedTime): void
     {
-        $scatteredJitter = new ScatteredJitter($range);
+        $jitter = new ScatteredJitter($range);
 
-        $actualTime = $scatteredJitter->jitter($time);
+        $actualTime = $jitter->jitter($time);
 
         $this->assertGreaterThanOrEqual($expectedTime[0], $actualTime);
         $this->assertLessThanOrEqual($expectedTime[1], $actualTime);

@@ -14,9 +14,9 @@ final class FibonacciStrategyTest extends TestCase
      */
     public function testFibonacciStrategy(int $attempt, float $time, float $expectedTime): void
     {
-        $fibonacciStrategy = new FibonacciStrategy();
+        $strategy = new FibonacciStrategy();
 
-        $actualTime = (int) $fibonacciStrategy->calculate($attempt, $time);
+        $actualTime = (int) $strategy->calculate($attempt, $time);
 
         $this->assertEquals($expectedTime, $actualTime);
     }

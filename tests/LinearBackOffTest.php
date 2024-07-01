@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Tests;
 
-use Orangesoft\BackOff\Duration\Duration;
 use Orangesoft\BackOff\Duration\Microseconds;
 use Orangesoft\BackOff\Jitter\EqualJitter;
 use Orangesoft\BackOff\Jitter\FullJitter;
@@ -15,27 +14,22 @@ use PHPUnit\Framework\TestCase;
 
 final class LinearBackOffTest extends TestCase
 {
-    private Duration $baseTime;
-    private Duration $capTime;
-    private SleeperSpy $sleeperSpy;
-
-    protected function setUp(): void
-    {
-        $this->baseTime = new Microseconds(1_000);
-        $this->capTime = new Microseconds(5_000);
-        $this->sleeperSpy = new SleeperSpy();
-    }
-
     /**
      * @dataProvider getLinearData
      */
     public function testLinearBackOff(int $attempt, int $expectedSleepTime): void
     {
-        $linearBackOff = new LinearBackOff(new NullJitter(), $this->sleeperSpy);
+        $sleeperSpy = new SleeperSpy();
+        $backOff = new LinearBackOff(
+            baseTime: new Microseconds(1_000),
+            capTime: new Microseconds(5_000),
+            jitter: new NullJitter(),
+            sleeper: $sleeperSpy,
+        );
 
-        $linearBackOff->backOff($attempt, $this->baseTime, $this->capTime);
+        $backOff->backOff($attempt);
 
-        $this->assertEquals($expectedSleepTime, $this->sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertEquals($expectedSleepTime, $sleeperSpy->getSleepTime()?->asMicroseconds());
     }
 
     public function getLinearData(): array
@@ -57,12 +51,18 @@ final class LinearBackOffTest extends TestCase
      */
     public function testLinearBackOffWithEqualJitter(int $attempt, array $expectedSleepTime): void
     {
-        $linearBackOff = new LinearBackOff(new EqualJitter(), $this->sleeperSpy);
+        $sleeperSpy = new SleeperSpy();
+        $backOff = new LinearBackOff(
+            baseTime: new Microseconds(1_000),
+            capTime: new Microseconds(5_000),
+            jitter: new EqualJitter(),
+            sleeper: $sleeperSpy,
+        );
 
-        $linearBackOff->backOff($attempt, $this->baseTime, $this->capTime);
+        $backOff->backOff($attempt);
 
-        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
-        $this->assertLessThanOrEqual($expectedSleepTime[1], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertLessThanOrEqual($expectedSleepTime[1], $sleeperSpy->getSleepTime()?->asMicroseconds());
     }
 
     public function getLinearDataWithEqualJitter(): array
@@ -84,12 +84,18 @@ final class LinearBackOffTest extends TestCase
      */
     public function testLinearBackOffWithFullJitter(int $attempt, array $expectedSleepTime): void
     {
-        $linearBackOff = new LinearBackOff(new FullJitter(), $this->sleeperSpy);
+        $sleeperSpy = new SleeperSpy();
+        $backOff = new LinearBackOff(
+            baseTime: new Microseconds(1_000),
+            capTime: new Microseconds(5_000),
+            jitter: new FullJitter(),
+            sleeper: $sleeperSpy,
+        );
 
-        $linearBackOff->backOff($attempt, $this->baseTime, $this->capTime);
+        $backOff->backOff($attempt);
 
-        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
-        $this->assertLessThanOrEqual($expectedSleepTime[1], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertLessThanOrEqual($expectedSleepTime[1], $sleeperSpy->getSleepTime()?->asMicroseconds());
     }
 
     public function getLinearDataWithFullJitter(): array
@@ -111,12 +117,18 @@ final class LinearBackOffTest extends TestCase
      */
     public function testLinearBackOffWithScatteredJitter(int $attempt, float $range, array $expectedSleepTime): void
     {
-        $linearBackOff = new LinearBackOff(new ScatteredJitter($range), $this->sleeperSpy);
+        $sleeperSpy = new SleeperSpy();
+        $backOff = new LinearBackOff(
+            baseTime: new Microseconds(1_000),
+            capTime: new Microseconds(5_000),
+            jitter: new ScatteredJitter($range),
+            sleeper: $sleeperSpy,
+        );
 
-        $linearBackOff->backOff($attempt, $this->baseTime, $this->capTime);
+        $backOff->backOff($attempt);
 
-        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
-        $this->assertLessThanOrEqual($expectedSleepTime[1], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertLessThanOrEqual($expectedSleepTime[1], $sleeperSpy->getSleepTime()?->asMicroseconds());
     }
 
     public function getLinearDataWithScatteredJitter(): array

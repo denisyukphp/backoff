@@ -6,7 +6,7 @@ namespace Orangesoft\BackOff\Strategy;
 
 use Assert\Assertion;
 
-final class PermanentStrategy implements StrategyInterface
+final class ConstantStrategy implements StrategyInterface
 {
     public function calculate(int $attempt, float $duration): float
     {

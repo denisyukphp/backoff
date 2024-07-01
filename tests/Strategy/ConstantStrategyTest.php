@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Tests\Strategy;
 
-use Orangesoft\BackOff\Strategy\PermanentStrategy;
+use Orangesoft\BackOff\Strategy\ConstantStrategy;
 use PHPUnit\Framework\TestCase;
 
-final class PermanentStrategyTest extends TestCase
+final class ConstantStrategyTest extends TestCase
 {
     /**
      * @dataProvider getConstantStrategyData
      */
     public function testConstantStrategy(int $attempt, float $time, float $expectedTime): void
     {
-        $permanentStrategy = new PermanentStrategy();
+        $strategy = new ConstantStrategy();
 
-        $actualTime = $permanentStrategy->calculate($attempt, $time);
+        $actualTime = $strategy->calculate($attempt, $time);
 
         $this->assertEquals($expectedTime, $actualTime);
     }

@@ -14,9 +14,9 @@ final class LinearStrategyTest extends TestCase
      */
     public function testLinearStrategy(int $attempt, int $time, int $expectedTime): void
     {
-        $linearStrategy = new LinearStrategy();
+        $strategy = new LinearStrategy();
 
-        $actualTime = $linearStrategy->calculate($attempt, $time);
+        $actualTime = $strategy->calculate($attempt, $time);
 
         $this->assertEquals($expectedTime, $actualTime);
     }
