@@ -14,11 +14,11 @@ final class DecorrelatedJitterStrategyTest extends TestCase
      *
      * @dataProvider getDecorrelatedJitterStrategyData
      */
-    public function testDecorrelatedJitterStrategy(float $multiplier, int $attempt, float $time, array $expectedTime): void
+    public function testDecorrelatedJitterStrategy(float $factor, int $attempt, float $time, array $expectedTime): void
     {
-        $decorrelatedJitterStrategy = new DecorrelatedJitterStrategy($multiplier);
+        $strategy = new DecorrelatedJitterStrategy($factor);
 
-        $actualTime = $decorrelatedJitterStrategy->calculate($attempt, $time);
+        $actualTime = $strategy->calculate($attempt, $time);
 
         $this->assertGreaterThanOrEqual($expectedTime[0], $actualTime);
         $this->assertLessThanOrEqual($expectedTime[1], $actualTime);

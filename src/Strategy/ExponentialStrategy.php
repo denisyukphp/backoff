@@ -9,14 +9,14 @@ use Assert\Assertion;
 final class ExponentialStrategy implements StrategyInterface
 {
     public function __construct(
-        private float $multiplier,
+        private float $factor,
     ) {
     }
 
     public function calculate(int $attempt, float $duration): float
     {
         // @codeCoverageIgnoreStart
-        Assertion::greaterOrEqualThan($this->multiplier, 0);
+        Assertion::greaterOrEqualThan($this->factor, 0);
         Assertion::greaterOrEqualThan($attempt, 0);
         Assertion::greaterOrEqualThan($duration, 0);
         // @codeCoverageIgnoreEnd
@@ -25,6 +25,6 @@ final class ExponentialStrategy implements StrategyInterface
             return 0;
         }
 
-        return $duration * $this->multiplier ** ($attempt - 1);
+        return $duration * $this->factor ** ($attempt - 1);
     }
 }

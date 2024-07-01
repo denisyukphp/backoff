@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Orangesoft\BackOff\Tests\Retry;
 
-use Orangesoft\BackOff\Retry\ImmediatelyThrowableRetry;
+use Orangesoft\BackOff\Retry\NullRetry;
 use PHPUnit\Framework\TestCase;
 
-final class ImmediatelyThrowableRetryTest extends TestCase
+final class NullRetryTest extends TestCase
 {
     public function testImmediatelyThrowable(): void
     {
-        $immediatelyThrowableRetry = new ImmediatelyThrowableRetry();
+        $retry = new NullRetry();
 
         $this->expectException(\RuntimeException::class);
 
-        $immediatelyThrowableRetry->call(static function () {
+        $retry->call(static function (): never {
             throw new \RuntimeException();
         });
     }

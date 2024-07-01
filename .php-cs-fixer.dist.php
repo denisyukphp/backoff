@@ -16,6 +16,8 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
+        'phpdoc_separation' => false,
+        'phpdoc_to_comment' => false,
     ])
     ->setFinder($finder)
 ;

@@ -9,14 +9,14 @@ use Assert\Assertion;
 final class DecorrelatedJitterStrategy implements StrategyInterface
 {
     public function __construct(
-        private float $multiplier,
+        private float $factor,
     ) {
     }
 
     public function calculate(int $attempt, float $duration): float
     {
         // @codeCoverageIgnoreStart
-        Assertion::greaterOrEqualThan($this->multiplier, 0);
+        Assertion::greaterOrEqualThan($this->factor, 0);
         Assertion::greaterOrEqualThan($attempt, 0);
         Assertion::greaterOrEqualThan($duration, 0);
         // @codeCoverageIgnoreEnd
@@ -25,6 +25,6 @@ final class DecorrelatedJitterStrategy implements StrategyInterface
             return 0;
         }
 
-        return random_float($duration, $duration * $this->multiplier * $attempt);
+        return random_float($duration, $duration * $this->factor * $attempt);
     }
 }

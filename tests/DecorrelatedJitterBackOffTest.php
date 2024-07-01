@@ -5,25 +5,11 @@ declare(strict_types=1);
 namespace Orangesoft\BackOff\Tests;
 
 use Orangesoft\BackOff\DecorrelatedJitterBackOff;
-use Orangesoft\BackOff\Duration\Duration;
 use Orangesoft\BackOff\Duration\Microseconds;
 use PHPUnit\Framework\TestCase;
 
 final class DecorrelatedJitterBackOffTest extends TestCase
 {
-    private float $multiplier;
-    private Duration $baseTime;
-    private Duration $capTime;
-    private SleeperSpy $sleeperSpy;
-
-    protected function setUp(): void
-    {
-        $this->multiplier = 3;
-        $this->baseTime = new Microseconds(1_000);
-        $this->capTime = new Microseconds(15_000);
-        $this->sleeperSpy = new SleeperSpy();
-    }
-
     /**
      * @param float[] $expectedSleepTime
      *
@@ -31,12 +17,18 @@ final class DecorrelatedJitterBackOffTest extends TestCase
      */
     public function testDecorrelatedJitterBackOff(int $attempt, array $expectedSleepTime): void
     {
-        $decorrelatedJitterBackOff = new DecorrelatedJitterBackOff($this->multiplier, $this->sleeperSpy);
+        $sleeperSpy = new SleeperSpy();
+        $backOff = new DecorrelatedJitterBackOff(
+            baseTime: new Microseconds(1_000),
+            capTime: new Microseconds(15_000),
+            factor: 3.0,
+            sleeper: $sleeperSpy,
+        );
 
-        $decorrelatedJitterBackOff->backOff($attempt, $this->baseTime, $this->capTime);
+        $backOff->backOff($attempt);
 
-        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
-        $this->assertLessThanOrEqual($expectedSleepTime[1], $this->sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertGreaterThanOrEqual($expectedSleepTime[0], $sleeperSpy->getSleepTime()?->asMicroseconds());
+        $this->assertLessThanOrEqual($expectedSleepTime[1], $sleeperSpy->getSleepTime()?->asMicroseconds());
     }
 
     public function getDecorrelatedJitterData(): array

@@ -12,11 +12,11 @@ final class ExponentialStrategyTest extends TestCase
     /**
      * @dataProvider getExponentialStrategyData
      */
-    public function testExponentialStrategy(float $multiplier, int $attempt, float $time, float $expectedTime): void
+    public function testExponentialStrategy(float $factor, int $attempt, float $time, float $expectedTime): void
     {
-        $exponentialStrategy = new ExponentialStrategy($multiplier);
+        $strategy = new ExponentialStrategy($factor);
 
-        $actualTime = $exponentialStrategy->calculate($attempt, $time);
+        $actualTime = $strategy->calculate($attempt, $time);
 
         $this->assertEquals($expectedTime, $actualTime);
     }

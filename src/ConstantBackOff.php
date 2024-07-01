@@ -10,18 +10,17 @@ use Orangesoft\BackOff\Jitter\JitterInterface;
 use Orangesoft\BackOff\Jitter\NullJitter;
 use Orangesoft\BackOff\Sleeper\Sleeper;
 use Orangesoft\BackOff\Sleeper\SleeperInterface;
-use Orangesoft\BackOff\Strategy\ExponentialStrategy;
+use Orangesoft\BackOff\Strategy\ConstantStrategy;
 
-final class ExponentialBackOff extends BackOff
+final class ConstantBackOff extends BackOff
 {
     public function __construct(
         Duration $baseTime,
         Duration $capTime,
-        float $factor = 2.0,
         ?JitterInterface $jitter = null,
         ?SleeperInterface $sleeper = null,
     ) {
-        $strategy = new ExponentialStrategy($factor);
+        $strategy = new ConstantStrategy();
         $jitter ??= new NullJitter();
         $generator = new Generator($strategy, $jitter);
         $sleeper ??= new Sleeper();

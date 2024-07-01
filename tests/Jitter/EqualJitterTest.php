@@ -16,9 +16,9 @@ final class EqualJitterTest extends TestCase
      */
     public function testFullJitter(int $time, array $expectedTime): void
     {
-        $equalJitter = new EqualJitter();
+        $jitter = new EqualJitter();
 
-        $actualTime = $equalJitter->jitter($time);
+        $actualTime = $jitter->jitter($time);
 
         $this->assertGreaterThanOrEqual($expectedTime[0], $actualTime);
         $this->assertLessThanOrEqual($expectedTime[1], $actualTime);
