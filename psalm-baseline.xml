@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="4.30.0@d0bc6e25d89f649e4f36a534f330f8bb4643dd69">
-  <file src="src/Retry/BackOffRetry.php">
-    <InvalidReturnType occurrences="1">
-      <code>mixed</code>
-    </InvalidReturnType>
-  </file>
   <file src="src/Retry/Retry.php">
     <InvalidReturnType occurrences="1">
       <code>mixed</code>
     </InvalidReturnType>
+    <PossiblyNullReference occurrences="2">
+      <code>backOff</code>
+      <code>classify</code>
+    </PossiblyNullReference>
   </file>
 </files>
