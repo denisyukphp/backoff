@@ -94,7 +94,7 @@ for ($i = 1; $i <= 10; $i++) {
 }
 ```
 
-Below you can see the time intervals in microseconds for exponential back-off with a multiplier of `2.0` and equal jitter, where the base time is `1_000` μs and the cap time is `512_000` μs:
+Below you can see the time intervals in microseconds for exponential back-off with a factor of `2.0` and equal jitter, where the base time is `1_000` μs and the cap time is `512_000` μs:
 
 ```text
 +---------+---------------------------+--------------------+
