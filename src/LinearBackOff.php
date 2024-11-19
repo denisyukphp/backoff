@@ -18,7 +18,7 @@ final class LinearBackOff extends BackOff
         Duration $baseTime,
         Duration $capTime,
         ?JitterInterface $jitter = null,
-        ?SleeperInterface $sleeper = null
+        ?SleeperInterface $sleeper = null,
     ) {
         $strategy = new LinearStrategy();
         $jitter ??= new NullJitter();

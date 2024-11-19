@@ -45,7 +45,7 @@ final class RetryTest extends TestCase
 
         try {
             $retry->call(new CallbackSpy(static function (int $counter): never {
-                throw new \RuntimeException(sprintf('Exception thrown %d times.', $counter));
+                throw new \RuntimeException(\sprintf('Exception thrown %d times.', $counter));
             }));
         } catch (\RuntimeException $e) {
             $this->assertSame('Exception thrown 2 times.', $e->getMessage());
