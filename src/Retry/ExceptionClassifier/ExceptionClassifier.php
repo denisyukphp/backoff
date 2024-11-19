@@ -31,7 +31,7 @@ final class ExceptionClassifier implements ExceptionClassifierInterface
     private function add(string $className): void
     {
         if (!class_exists($className) || !is_a($className, \Throwable::class, true)) {
-            throw new \InvalidArgumentException(sprintf('Exception class must be a class that exists and can be thrown, "%s" given.', get_debug_type($className))); // @codeCoverageIgnore
+            throw new \InvalidArgumentException(\sprintf('Exception class must be a class that exists and can be thrown, "%s" given.', get_debug_type($className))); // @codeCoverageIgnore
         }
 
         $this->classNames[] = $className;

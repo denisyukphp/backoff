@@ -19,7 +19,7 @@ final class CallbackExceptionClassifier implements ExceptionClassifierInterface
         $result = ($this->callback)($throwable);
 
         if (!\is_bool($result)) {
-            throw new \RuntimeException(sprintf('Callback must return bool, %s given.', get_debug_type($result)));
+            throw new \RuntimeException(\sprintf('Callback must return bool, %s given.', get_debug_type($result)));
         }
 
         return $result;
